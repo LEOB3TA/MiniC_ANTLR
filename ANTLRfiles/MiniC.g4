@@ -1,17 +1,20 @@
 grammar MiniC;
 import MCLexer;
+options {
+  tokenVocab=MiniCLexer;
+}
 
 program : declaration* statement*;
-declaration : TYPE ID (EQUAL (expression | bracketExpression | condition | assignment))? ENDOFISTRUCTION;
-statement : ENDOFISTRUCTION | (expression | bracketExpression | condition | assignment) ENDOFISTRUCTION | blockStatement | ifStatement | whileStatement;
+declaration : TYPE ID #SimpleDeclaration
+            | TYPE ID EQUAL (ID | expression| operation) ENDOFINSTRUCTION #AssignDeclaration;
+statement : ENDOFINSTRUCTION | (expression | operation) ENDOFINSTRUCTION | blockStatement | ifStatement | whileStatement;
 blockStatement : CBRACKETOPEN declaration* statement* CBRACKETCLOSE;
-ifStatement : IF RBRACKETOPEN(expression | bracketExpression | condition | assignment) RBRACKETCLOSE statement (ELSE statement)?;
-whileStatement : WHILE RBRACKETOPEN(expression | bracketExpression | condition | assignment) RBRACKETCLOSE statement;
-expression : BOOL | NUMBER | NEGATIVENUMBER | DOUBLENUMBER;
-bracketExpression: RBRACKETOPEN expression RBRACKETCLOSE;
-condition: NOT? (expression | ID) (OPERATOR (expression | ID))?;
-assignment: ID (EQUAL expression)+;
-
-
+ifStatement : IF RBRACKETOPEN (expression | operation ) RBRACKETCLOSE statement (ELSE statement)?;
+whileStatement : WHILE RBRACKETOPEN (expression | operation ) RBRACKETCLOSE statement;
+expression : BOOL #BoolExpr
+            | NUMBER #NumberExpr
+            | RBRACKETOPEN expression RBRACKETCLOSE #BracketExpr
+            | ID EQUAL (ID | expression | operation) #AssignExpr;
+operation : NOT? (expression | ID) (OPERATOR (expression | ID))?;
 
 

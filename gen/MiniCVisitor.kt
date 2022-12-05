@@ -17,11 +17,19 @@ interface MiniCVisitor<T> : ParseTreeVisitor<T> {
 	 */
 	fun visitProgram(ctx : MiniCParser.ProgramContext) : T
 	/**
-	 * Visit a parse tree produced by {@link MiniCParser#declaration}.
+	 * Visit a parse tree produced by the {@code SimpleDeclaration}
+	 * labeled alternative in {@link MiniCParser#declaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitDeclaration(ctx : MiniCParser.DeclarationContext) : T
+	fun visitSimpleDeclaration(ctx : MiniCParser.SimpleDeclarationContext) : T
+	/**
+	 * Visit a parse tree produced by the {@code AssignDeclaration}
+	 * labeled alternative in {@link MiniCParser#declaration}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	fun visitAssignDeclaration(ctx : MiniCParser.AssignDeclarationContext) : T
 	/**
 	 * Visit a parse tree produced by {@link MiniCParser#statement}.
 	 * @param ctx the parse tree
@@ -47,27 +55,37 @@ interface MiniCVisitor<T> : ParseTreeVisitor<T> {
 	 */
 	fun visitWhileStatement(ctx : MiniCParser.WhileStatementContext) : T
 	/**
-	 * Visit a parse tree produced by {@link MiniCParser#expression}.
+	 * Visit a parse tree produced by the {@code BoolExpr}
+	 * labeled alternative in {@link MiniCParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitExpression(ctx : MiniCParser.ExpressionContext) : T
+	fun visitBoolExpr(ctx : MiniCParser.BoolExprContext) : T
 	/**
-	 * Visit a parse tree produced by {@link MiniCParser#bracketExpression}.
+	 * Visit a parse tree produced by the {@code NumberExpr}
+	 * labeled alternative in {@link MiniCParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitBracketExpression(ctx : MiniCParser.BracketExpressionContext) : T
+	fun visitNumberExpr(ctx : MiniCParser.NumberExprContext) : T
 	/**
-	 * Visit a parse tree produced by {@link MiniCParser#condition}.
+	 * Visit a parse tree produced by the {@code BracketExpr}
+	 * labeled alternative in {@link MiniCParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitCondition(ctx : MiniCParser.ConditionContext) : T
+	fun visitBracketExpr(ctx : MiniCParser.BracketExprContext) : T
 	/**
-	 * Visit a parse tree produced by {@link MiniCParser#assignment}.
+	 * Visit a parse tree produced by the {@code AssignExpr}
+	 * labeled alternative in {@link MiniCParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitAssignment(ctx : MiniCParser.AssignmentContext) : T
+	fun visitAssignExpr(ctx : MiniCParser.AssignExprContext) : T
+	/**
+	 * Visit a parse tree produced by {@link MiniCParser#operation}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	fun visitOperation(ctx : MiniCParser.OperationContext) : T
 }

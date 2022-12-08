@@ -15,6 +15,6 @@ expression : BOOL #BoolExpr
             | NUMBER #NumberExpr
             | RBRACKETOPEN expression RBRACKETCLOSE #BracketExpr
             | ID EQUAL (expression | operation) #AssignExpr;
-operation : NOT? (expression | ID) (OPERATOR (expression | ID))?;
+operation : NOT? (expression | ID) (OPERATOR (expression | operation))?;
 
 

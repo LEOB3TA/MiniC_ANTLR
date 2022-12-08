@@ -6,7 +6,7 @@ IF : 'if';
 ELSE : 'else';
 WHILE : 'while';
 TYPE : 'int' | 'double';
-WS  : [ \t\r\n]+ -> skip;
+WS  : [\t\r\n]+ -> skip;
 COMMENT : '/*' .*? '*/' -> skip;
 LINE_COMMENT: '//' ~[\r\n]* -> skip;
 NUMBER : ('-')? DIGIT+ ('.' DIGIT+)?;

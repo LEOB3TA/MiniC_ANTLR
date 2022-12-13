@@ -124,7 +124,7 @@ class MiniCParser(input: TokenStream) : Parser(input) {
             el
         }
 
-        private const val serializedATN : String = "\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\u0003\u0017\u0078\u0004\u0002\u0009\u0002\u0004\u0003\u0009\u0003\u0004\u0004\u0009\u0004\u0004\u0005\u0009\u0005\u0004\u0006\u0009\u0006\u0004\u0007\u0009\u0007\u0004\u0008\u0009\u0008\u0004\u0009\u0009\u0009\u0003\u0002\u0007\u0002\u0014\u000a\u0002\u000c\u0002\u000e\u0002\u0017\u000b\u0002\u0003\u0002\u0007\u0002\u001a\u000a\u0002\u000c\u0002\u000e\u0002\u001d\u000b\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0005\u0003\u0026\u000a\u0003\u0003\u0003\u0003\u0003\u0005\u0003\u002a\u000a\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0005\u0004\u002f\u000a\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0005\u0004\u0036\u000a\u0004\u0003\u0005\u0003\u0005\u0007\u0005\u003a\u000a\u0005\u000c\u0005\u000e\u0005\u003d\u000b\u0005\u0003\u0005\u0007\u0005\u0040\u000a\u0005\u000c\u0005\u000e\u0005\u0043\u000b\u0005\u0003\u0005\u0003\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0005\u0006\u004b\u000a\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0005\u0006\u0051\u000a\u0006\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0005\u0007\u0057\u000a\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0005\u0008\u0066\u000a\u0008\u0005\u0008\u0068\u000a\u0008\u0003\u0009\u0005\u0009\u006b\u000a\u0009\u0003\u0009\u0003\u0009\u0005\u0009\u006f\u000a\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0005\u0009\u0074\u000a\u0009\u0005\u0009\u0076\u000a\u0009\u0003\u0009\u0002\u0002\u000a\u0002\u0004\u0006\u0008\u000a\u000c\u000e\u0010\u0002\u0002\u0002\u0085\u0002\u0015\u0003\u0002\u0002\u0002\u0004\u0029\u0003\u0002\u0002\u0002\u0006\u0035\u0003\u0002\u0002\u0002\u0008\u0037\u0003\u0002\u0002\u0002\u000a\u0046\u0003\u0002\u0002\u0002\u000c\u0052\u0003\u0002\u0002\u0002\u000e\u0067\u0003\u0002\u0002\u0002\u0010\u006a\u0003\u0002\u0002\u0002\u0012\u0014\u0005\u0004\u0003\u0002\u0013\u0012\u0003\u0002\u0002\u0002\u0014\u0017\u0003\u0002\u0002\u0002\u0015\u0013\u0003\u0002\u0002\u0002\u0015\u0016\u0003\u0002\u0002\u0002\u0016\u001b\u0003\u0002\u0002\u0002\u0017\u0015\u0003\u0002\u0002\u0002\u0018\u001a\u0005\u0006\u0004\u0002\u0019\u0018\u0003\u0002\u0002\u0002\u001a\u001d\u0003\u0002\u0002\u0002\u001b\u0019\u0003\u0002\u0002\u0002\u001b\u001c\u0003\u0002\u0002\u0002\u001c\u0003\u0003\u0002\u0002\u0002\u001d\u001b\u0003\u0002\u0002\u0002\u001e\u001f\u0007\u0007\u0002\u0002\u001f\u002a\u0007\u000c\u0002\u0002\u0020\u0021\u0007\u0007\u0002\u0002\u0021\u0022\u0007\u000c\u0002\u0002\u0022\u0025\u0007\u0011\u0002\u0002\u0023\u0026\u0005\u000e\u0008\u0002\u0024\u0026\u0005\u0010\u0009\u0002\u0025\u0023\u0003\u0002\u0002\u0002\u0025\u0024\u0003\u0002\u0002\u0002\u0026\u0027\u0003\u0002\u0002\u0002\u0027\u0028\u0007\u0012\u0002\u0002\u0028\u002a\u0003\u0002\u0002\u0002\u0029\u001e\u0003\u0002\u0002\u0002\u0029\u0020\u0003\u0002\u0002\u0002\u002a\u0005\u0003\u0002\u0002\u0002\u002b\u0036\u0007\u0012\u0002\u0002\u002c\u002f\u0005\u000e\u0008\u0002\u002d\u002f\u0005\u0010\u0009\u0002\u002e\u002c\u0003\u0002\u0002\u0002\u002e\u002d\u0003\u0002\u0002\u0002\u002f\u0030\u0003\u0002\u0002\u0002\u0030\u0031\u0007\u0012\u0002\u0002\u0031\u0036\u0003\u0002\u0002\u0002\u0032\u0036\u0005\u0008\u0005\u0002\u0033\u0036\u0005\u000a\u0006\u0002\u0034\u0036\u0005\u000c\u0007\u0002\u0035\u002b\u0003\u0002\u0002\u0002\u0035\u002e\u0003\u0002\u0002\u0002\u0035\u0032\u0003\u0002\u0002\u0002\u0035\u0033\u0003\u0002\u0002\u0002\u0035\u0034\u0003\u0002\u0002\u0002\u0036\u0007\u0003\u0002\u0002\u0002\u0037\u003b\u0007\u0016\u0002\u0002\u0038\u003a\u0005\u0004\u0003\u0002\u0039\u0038\u0003\u0002\u0002\u0002\u003a\u003d\u0003\u0002\u0002\u0002\u003b\u0039\u0003\u0002\u0002\u0002\u003b\u003c\u0003\u0002\u0002\u0002\u003c\u0041\u0003\u0002\u0002\u0002\u003d\u003b\u0003\u0002\u0002\u0002\u003e\u0040\u0005\u0006\u0004\u0002\u003f\u003e\u0003\u0002\u0002\u0002\u0040\u0043\u0003\u0002\u0002\u0002\u0041\u003f\u0003\u0002\u0002\u0002\u0041\u0042\u0003\u0002\u0002\u0002\u0042\u0044\u0003\u0002\u0002\u0002\u0043\u0041\u0003\u0002\u0002\u0002\u0044\u0045\u0007\u0017\u0002\u0002\u0045\u0009\u0003\u0002\u0002\u0002\u0046\u0047\u0007\u0004\u0002\u0002\u0047\u004a\u0007\u0014\u0002\u0002\u0048\u004b\u0005\u000e\u0008\u0002\u0049\u004b\u0005\u0010\u0009\u0002\u004a\u0048\u0003\u0002\u0002\u0002\u004a\u0049\u0003\u0002\u0002\u0002\u004b\u004c\u0003\u0002\u0002\u0002\u004c\u004d\u0007\u0015\u0002\u0002\u004d\u0050\u0005\u0006\u0004\u0002\u004e\u004f\u0007\u0005\u0002\u0002\u004f\u0051\u0005\u0006\u0004\u0002\u0050\u004e\u0003\u0002\u0002\u0002\u0050\u0051\u0003\u0002\u0002\u0002\u0051\u000b\u0003\u0002\u0002\u0002\u0052\u0053\u0007\u0006\u0002\u0002\u0053\u0056\u0007\u0014\u0002\u0002\u0054\u0057\u0005\u000e\u0008\u0002\u0055\u0057\u0005\u0010\u0009\u0002\u0056\u0054\u0003\u0002\u0002\u0002\u0056\u0055\u0003\u0002\u0002\u0002\u0057\u0058\u0003\u0002\u0002\u0002\u0058\u0059\u0007\u0015\u0002\u0002\u0059\u005a\u0005\u0006\u0004\u0002\u005a\u000d\u0003\u0002\u0002\u0002\u005b\u0068\u0007\u0003\u0002\u0002\u005c\u0068\u0007\u000b\u0002\u0002\u005d\u005e\u0007\u0014\u0002\u0002\u005e\u005f\u0005\u000e\u0008\u0002\u005f\u0060\u0007\u0015\u0002\u0002\u0060\u0068\u0003\u0002\u0002\u0002\u0061\u0062\u0007\u000c\u0002\u0002\u0062\u0065\u0007\u0011\u0002\u0002\u0063\u0066\u0005\u000e\u0008\u0002\u0064\u0066\u0005\u0010\u0009\u0002\u0065\u0063\u0003\u0002\u0002\u0002\u0065\u0064\u0003\u0002\u0002\u0002\u0066\u0068\u0003\u0002\u0002\u0002\u0067\u005b\u0003\u0002\u0002\u0002\u0067\u005c\u0003\u0002\u0002\u0002\u0067\u005d\u0003\u0002\u0002\u0002\u0067\u0061\u0003\u0002\u0002\u0002\u0068\u000f\u0003\u0002\u0002\u0002\u0069\u006b\u0007\u0010\u0002\u0002\u006a\u0069\u0003\u0002\u0002\u0002\u006a\u006b\u0003\u0002\u0002\u0002\u006b\u006e\u0003\u0002\u0002\u0002\u006c\u006f\u0005\u000e\u0008\u0002\u006d\u006f\u0007\u000c\u0002\u0002\u006e\u006c\u0003\u0002\u0002\u0002\u006e\u006d\u0003\u0002\u0002\u0002\u006f\u0075\u0003\u0002\u0002\u0002\u0070\u0073\u0007\u000f\u0002\u0002\u0071\u0074\u0005\u000e\u0008\u0002\u0072\u0074\u0005\u0010\u0009\u0002\u0073\u0071\u0003\u0002\u0002\u0002\u0073\u0072\u0003\u0002\u0002\u0002\u0074\u0076\u0003\u0002\u0002\u0002\u0075\u0070\u0003\u0002\u0002\u0002\u0075\u0076\u0003\u0002\u0002\u0002\u0076\u0011\u0003\u0002\u0002\u0002\u0013\u0015\u001b\u0025\u0029\u002e\u0035\u003b\u0041\u004a\u0050\u0056\u0065\u0067\u006a\u006e\u0073\u0075"
+        private const val serializedATN : String = "\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\u0003\u0017\u0079\u0004\u0002\u0009\u0002\u0004\u0003\u0009\u0003\u0004\u0004\u0009\u0004\u0004\u0005\u0009\u0005\u0004\u0006\u0009\u0006\u0004\u0007\u0009\u0007\u0004\u0008\u0009\u0008\u0004\u0009\u0009\u0009\u0003\u0002\u0007\u0002\u0014\u000a\u0002\u000c\u0002\u000e\u0002\u0017\u000b\u0002\u0003\u0002\u0007\u0002\u001a\u000a\u0002\u000c\u0002\u000e\u0002\u001d\u000b\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0005\u0003\u0027\u000a\u0003\u0003\u0003\u0003\u0003\u0005\u0003\u002b\u000a\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0005\u0004\u0030\u000a\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0005\u0004\u0037\u000a\u0004\u0003\u0005\u0003\u0005\u0007\u0005\u003b\u000a\u0005\u000c\u0005\u000e\u0005\u003e\u000b\u0005\u0003\u0005\u0007\u0005\u0041\u000a\u0005\u000c\u0005\u000e\u0005\u0044\u000b\u0005\u0003\u0005\u0003\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0005\u0006\u004c\u000a\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0005\u0006\u0052\u000a\u0006\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0005\u0007\u0058\u000a\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0005\u0008\u0067\u000a\u0008\u0005\u0008\u0069\u000a\u0008\u0003\u0009\u0005\u0009\u006c\u000a\u0009\u0003\u0009\u0003\u0009\u0005\u0009\u0070\u000a\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0005\u0009\u0075\u000a\u0009\u0005\u0009\u0077\u000a\u0009\u0003\u0009\u0002\u0002\u000a\u0002\u0004\u0006\u0008\u000a\u000c\u000e\u0010\u0002\u0002\u0002\u0086\u0002\u0015\u0003\u0002\u0002\u0002\u0004\u002a\u0003\u0002\u0002\u0002\u0006\u0036\u0003\u0002\u0002\u0002\u0008\u0038\u0003\u0002\u0002\u0002\u000a\u0047\u0003\u0002\u0002\u0002\u000c\u0053\u0003\u0002\u0002\u0002\u000e\u0068\u0003\u0002\u0002\u0002\u0010\u006b\u0003\u0002\u0002\u0002\u0012\u0014\u0005\u0004\u0003\u0002\u0013\u0012\u0003\u0002\u0002\u0002\u0014\u0017\u0003\u0002\u0002\u0002\u0015\u0013\u0003\u0002\u0002\u0002\u0015\u0016\u0003\u0002\u0002\u0002\u0016\u001b\u0003\u0002\u0002\u0002\u0017\u0015\u0003\u0002\u0002\u0002\u0018\u001a\u0005\u0006\u0004\u0002\u0019\u0018\u0003\u0002\u0002\u0002\u001a\u001d\u0003\u0002\u0002\u0002\u001b\u0019\u0003\u0002\u0002\u0002\u001b\u001c\u0003\u0002\u0002\u0002\u001c\u0003\u0003\u0002\u0002\u0002\u001d\u001b\u0003\u0002\u0002\u0002\u001e\u001f\u0007\u0007\u0002\u0002\u001f\u0020\u0007\u000c\u0002\u0002\u0020\u002b\u0007\u0012\u0002\u0002\u0021\u0022\u0007\u0007\u0002\u0002\u0022\u0023\u0007\u000c\u0002\u0002\u0023\u0026\u0007\u0011\u0002\u0002\u0024\u0027\u0005\u000e\u0008\u0002\u0025\u0027\u0005\u0010\u0009\u0002\u0026\u0024\u0003\u0002\u0002\u0002\u0026\u0025\u0003\u0002\u0002\u0002\u0027\u0028\u0003\u0002\u0002\u0002\u0028\u0029\u0007\u0012\u0002\u0002\u0029\u002b\u0003\u0002\u0002\u0002\u002a\u001e\u0003\u0002\u0002\u0002\u002a\u0021\u0003\u0002\u0002\u0002\u002b\u0005\u0003\u0002\u0002\u0002\u002c\u0037\u0007\u0012\u0002\u0002\u002d\u0030\u0005\u000e\u0008\u0002\u002e\u0030\u0005\u0010\u0009\u0002\u002f\u002d\u0003\u0002\u0002\u0002\u002f\u002e\u0003\u0002\u0002\u0002\u0030\u0031\u0003\u0002\u0002\u0002\u0031\u0032\u0007\u0012\u0002\u0002\u0032\u0037\u0003\u0002\u0002\u0002\u0033\u0037\u0005\u0008\u0005\u0002\u0034\u0037\u0005\u000a\u0006\u0002\u0035\u0037\u0005\u000c\u0007\u0002\u0036\u002c\u0003\u0002\u0002\u0002\u0036\u002f\u0003\u0002\u0002\u0002\u0036\u0033\u0003\u0002\u0002\u0002\u0036\u0034\u0003\u0002\u0002\u0002\u0036\u0035\u0003\u0002\u0002\u0002\u0037\u0007\u0003\u0002\u0002\u0002\u0038\u003c\u0007\u0016\u0002\u0002\u0039\u003b\u0005\u0004\u0003\u0002\u003a\u0039\u0003\u0002\u0002\u0002\u003b\u003e\u0003\u0002\u0002\u0002\u003c\u003a\u0003\u0002\u0002\u0002\u003c\u003d\u0003\u0002\u0002\u0002\u003d\u0042\u0003\u0002\u0002\u0002\u003e\u003c\u0003\u0002\u0002\u0002\u003f\u0041\u0005\u0006\u0004\u0002\u0040\u003f\u0003\u0002\u0002\u0002\u0041\u0044\u0003\u0002\u0002\u0002\u0042\u0040\u0003\u0002\u0002\u0002\u0042\u0043\u0003\u0002\u0002\u0002\u0043\u0045\u0003\u0002\u0002\u0002\u0044\u0042\u0003\u0002\u0002\u0002\u0045\u0046\u0007\u0017\u0002\u0002\u0046\u0009\u0003\u0002\u0002\u0002\u0047\u0048\u0007\u0004\u0002\u0002\u0048\u004b\u0007\u0014\u0002\u0002\u0049\u004c\u0005\u000e\u0008\u0002\u004a\u004c\u0005\u0010\u0009\u0002\u004b\u0049\u0003\u0002\u0002\u0002\u004b\u004a\u0003\u0002\u0002\u0002\u004c\u004d\u0003\u0002\u0002\u0002\u004d\u004e\u0007\u0015\u0002\u0002\u004e\u0051\u0005\u0006\u0004\u0002\u004f\u0050\u0007\u0005\u0002\u0002\u0050\u0052\u0005\u0006\u0004\u0002\u0051\u004f\u0003\u0002\u0002\u0002\u0051\u0052\u0003\u0002\u0002\u0002\u0052\u000b\u0003\u0002\u0002\u0002\u0053\u0054\u0007\u0006\u0002\u0002\u0054\u0057\u0007\u0014\u0002\u0002\u0055\u0058\u0005\u000e\u0008\u0002\u0056\u0058\u0005\u0010\u0009\u0002\u0057\u0055\u0003\u0002\u0002\u0002\u0057\u0056\u0003\u0002\u0002\u0002\u0058\u0059\u0003\u0002\u0002\u0002\u0059\u005a\u0007\u0015\u0002\u0002\u005a\u005b\u0005\u0006\u0004\u0002\u005b\u000d\u0003\u0002\u0002\u0002\u005c\u0069\u0007\u0003\u0002\u0002\u005d\u0069\u0007\u000b\u0002\u0002\u005e\u005f\u0007\u0014\u0002\u0002\u005f\u0060\u0005\u000e\u0008\u0002\u0060\u0061\u0007\u0015\u0002\u0002\u0061\u0069\u0003\u0002\u0002\u0002\u0062\u0063\u0007\u000c\u0002\u0002\u0063\u0066\u0007\u0011\u0002\u0002\u0064\u0067\u0005\u000e\u0008\u0002\u0065\u0067\u0005\u0010\u0009\u0002\u0066\u0064\u0003\u0002\u0002\u0002\u0066\u0065\u0003\u0002\u0002\u0002\u0067\u0069\u0003\u0002\u0002\u0002\u0068\u005c\u0003\u0002\u0002\u0002\u0068\u005d\u0003\u0002\u0002\u0002\u0068\u005e\u0003\u0002\u0002\u0002\u0068\u0062\u0003\u0002\u0002\u0002\u0069\u000f\u0003\u0002\u0002\u0002\u006a\u006c\u0007\u0010\u0002\u0002\u006b\u006a\u0003\u0002\u0002\u0002\u006b\u006c\u0003\u0002\u0002\u0002\u006c\u006f\u0003\u0002\u0002\u0002\u006d\u0070\u0005\u000e\u0008\u0002\u006e\u0070\u0007\u000c\u0002\u0002\u006f\u006d\u0003\u0002\u0002\u0002\u006f\u006e\u0003\u0002\u0002\u0002\u0070\u0076\u0003\u0002\u0002\u0002\u0071\u0074\u0007\u000f\u0002\u0002\u0072\u0075\u0005\u000e\u0008\u0002\u0073\u0075\u0005\u0010\u0009\u0002\u0074\u0072\u0003\u0002\u0002\u0002\u0074\u0073\u0003\u0002\u0002\u0002\u0075\u0077\u0003\u0002\u0002\u0002\u0076\u0071\u0003\u0002\u0002\u0002\u0076\u0077\u0003\u0002\u0002\u0002\u0077\u0011\u0003\u0002\u0002\u0002\u0013\u0015\u001b\u0026\u002a\u002f\u0036\u003c\u0042\u004b\u0051\u0057\u0066\u0068\u006b\u006f\u0074\u0076"
 
         val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
         init {
@@ -242,6 +242,7 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 	open class SimpleDeclarationContext : DeclarationContext {
 		fun TYPE() : TerminalNode? = getToken(MiniCParser.Tokens.TYPE.id, 0)
 		fun ID() : TerminalNode? = getToken(MiniCParser.Tokens.ID.id, 0)
+		fun ENDOFINSTRUCTION() : TerminalNode? = getToken(MiniCParser.Tokens.ENDOFINSTRUCTION.id, 0)
 		constructor(ctx: DeclarationContext) { copyFrom(ctx) }
 		override fun <T> accept(visitor : ParseTreeVisitor<out T>) : T {
 			if ( visitor is MiniCVisitor ) return (visitor as MiniCVisitor<out T>).visitSimpleDeclaration(this)
@@ -266,7 +267,7 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		var _localctx : DeclarationContext = DeclarationContext(context, state)
 		enterRule(_localctx, 2, Rules.RULE_declaration.id)
 		try {
-			this.state = 39
+			this.state = 40
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,3,context) ) {
 			1 -> {_localctx = SimpleDeclarationContext(_localctx)
@@ -276,29 +277,31 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 			match(TYPE) as Token
 			this.state = 29
 			match(ID) as Token
+			this.state = 30
+			match(ENDOFINSTRUCTION) as Token
 			}}
 			2 -> {_localctx = AssignDeclarationContext(_localctx)
 			enterOuterAlt(_localctx, 2)
 			if (true){
-			this.state = 30
-			match(TYPE) as Token
 			this.state = 31
-			match(ID) as Token
+			match(TYPE) as Token
 			this.state = 32
+			match(ID) as Token
+			this.state = 33
 			match(EQUAL) as Token
-			this.state = 35
+			this.state = 36
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,2,context) ) {
 			1 -> {if (true){
-			this.state = 33
+			this.state = 34
 			expression()
 			}}
 			2 -> {if (true){
-			this.state = 34
+			this.state = 35
 			operation()
 			}}
 			}
-			this.state = 37
+			this.state = 38
 			match(ENDOFINSTRUCTION) as Token
 			}}
 			}
@@ -336,49 +339,49 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		var _localctx : StatementContext = StatementContext(context, state)
 		enterRule(_localctx, 4, Rules.RULE_statement.id)
 		try {
-			this.state = 51
+			this.state = 52
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
 			ENDOFINSTRUCTION  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 41
+			this.state = 42
 			match(ENDOFINSTRUCTION) as Token
 			}}
 			BOOL , NUMBER , ID , NOT , RBRACKETOPEN  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 2)
 			if (true){
-			this.state = 44
+			this.state = 45
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,4,context) ) {
 			1 -> {if (true){
-			this.state = 42
+			this.state = 43
 			expression()
 			}}
 			2 -> {if (true){
-			this.state = 43
+			this.state = 44
 			operation()
 			}}
 			}
-			this.state = 46
+			this.state = 47
 			match(ENDOFINSTRUCTION) as Token
 			}}
 			CBRACKETOPEN  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 3)
 			if (true){
-			this.state = 48
+			this.state = 49
 			blockStatement()
 			}}
 			IF  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 4)
 			if (true){
-			this.state = 49
+			this.state = 50
 			ifStatement()
 			}}
 			WHILE  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 5)
 			if (true){
-			this.state = 50
+			this.state = 51
 			whileStatement()
 			}}
 			else -> throw NoViableAltException(this)
@@ -420,37 +423,37 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 53
+			this.state = 54
 			match(CBRACKETOPEN) as Token
-			this.state = 57
+			this.state = 58
 			errorHandler.sync(this);
 			_la = _input!!.LA(1)
 			while (_la==TYPE) {
 				if (true){
 				if (true){
-				this.state = 54
+				this.state = 55
 				declaration()
 				}
 				}
-				this.state = 59
+				this.state = 60
 				errorHandler.sync(this)
 				_la = _input!!.LA(1)
 			}
-			this.state = 63
+			this.state = 64
 			errorHandler.sync(this);
 			_la = _input!!.LA(1)
 			while ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl BOOL) or (1L shl IF) or (1L shl WHILE) or (1L shl NUMBER) or (1L shl ID) or (1L shl NOT) or (1L shl ENDOFINSTRUCTION) or (1L shl RBRACKETOPEN) or (1L shl CBRACKETOPEN))) != 0L)) {
 				if (true){
 				if (true){
-				this.state = 60
+				this.state = 61
 				statement()
 				}
 				}
-				this.state = 65
+				this.state = 66
 				errorHandler.sync(this)
 				_la = _input!!.LA(1)
 			}
-			this.state = 66
+			this.state = 67
 			match(CBRACKETCLOSE) as Token
 			}
 		}
@@ -491,33 +494,33 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 68
-			match(IF) as Token
 			this.state = 69
+			match(IF) as Token
+			this.state = 70
 			match(RBRACKETOPEN) as Token
-			this.state = 72
+			this.state = 73
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,8,context) ) {
 			1 -> {if (true){
-			this.state = 70
+			this.state = 71
 			expression()
 			}}
 			2 -> {if (true){
-			this.state = 71
+			this.state = 72
 			operation()
 			}}
 			}
-			this.state = 74
-			match(RBRACKETCLOSE) as Token
 			this.state = 75
+			match(RBRACKETCLOSE) as Token
+			this.state = 76
 			statement()
-			this.state = 78
+			this.state = 79
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,9,context) ) {
 			1   -> if (true){
-			this.state = 76
-			match(ELSE) as Token
 			this.state = 77
+			match(ELSE) as Token
+			this.state = 78
 			statement()
 			}
 			}
@@ -558,25 +561,25 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 80
-			match(WHILE) as Token
 			this.state = 81
+			match(WHILE) as Token
+			this.state = 82
 			match(RBRACKETOPEN) as Token
-			this.state = 84
+			this.state = 85
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,10,context) ) {
 			1 -> {if (true){
-			this.state = 82
+			this.state = 83
 			expression()
 			}}
 			2 -> {if (true){
-			this.state = 83
+			this.state = 84
 			operation()
 			}}
 			}
-			this.state = 86
-			match(RBRACKETCLOSE) as Token
 			this.state = 87
+			match(RBRACKETCLOSE) as Token
+			this.state = 88
 			statement()
 			}
 		}
@@ -645,47 +648,47 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		var _localctx : ExpressionContext = ExpressionContext(context, state)
 		enterRule(_localctx, 12, Rules.RULE_expression.id)
 		try {
-			this.state = 101
+			this.state = 102
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
 			BOOL  ->  /*LL1AltBlock*/{_localctx = BoolExprContext(_localctx)
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 89
+			this.state = 90
 			match(BOOL) as Token
 			}}
 			NUMBER  ->  /*LL1AltBlock*/{_localctx = NumberExprContext(_localctx)
 			enterOuterAlt(_localctx, 2)
 			if (true){
-			this.state = 90
+			this.state = 91
 			match(NUMBER) as Token
 			}}
 			RBRACKETOPEN  ->  /*LL1AltBlock*/{_localctx = BracketExprContext(_localctx)
 			enterOuterAlt(_localctx, 3)
 			if (true){
-			this.state = 91
-			match(RBRACKETOPEN) as Token
 			this.state = 92
-			expression()
+			match(RBRACKETOPEN) as Token
 			this.state = 93
+			expression()
+			this.state = 94
 			match(RBRACKETCLOSE) as Token
 			}}
 			ID  ->  /*LL1AltBlock*/{_localctx = AssignExprContext(_localctx)
 			enterOuterAlt(_localctx, 4)
 			if (true){
-			this.state = 95
-			match(ID) as Token
 			this.state = 96
+			match(ID) as Token
+			this.state = 97
 			match(EQUAL) as Token
-			this.state = 99
+			this.state = 100
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,11,context) ) {
 			1 -> {if (true){
-			this.state = 97
+			this.state = 98
 			expression()
 			}}
 			2 -> {if (true){
-			this.state = 98
+			this.state = 99
 			operation()
 			}}
 			}
@@ -729,43 +732,43 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 104
+			this.state = 105
 			errorHandler.sync(this)
 			_la = _input!!.LA(1)
 			if (_la==NOT) {
 				if (true){
-				this.state = 103
+				this.state = 104
 				match(NOT) as Token
 				}
 			}
 
-			this.state = 108
+			this.state = 109
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,14,context) ) {
 			1 -> {if (true){
-			this.state = 106
+			this.state = 107
 			expression()
 			}}
 			2 -> {if (true){
-			this.state = 107
+			this.state = 108
 			match(ID) as Token
 			}}
 			}
-			this.state = 115
+			this.state = 116
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,16,context) ) {
 			1   -> if (true){
-			this.state = 110
+			this.state = 111
 			match(OPERATOR) as Token
-			this.state = 113
+			this.state = 114
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,15,context) ) {
 			1 -> {if (true){
-			this.state = 111
+			this.state = 112
 			expression()
 			}}
 			2 -> {if (true){
-			this.state = 112
+			this.state = 113
 			operation()
 			}}
 			}

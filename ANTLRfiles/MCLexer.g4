@@ -13,6 +13,11 @@ NUMBER : ('-')? DIGIT+ ('.' DIGIT+)?;
 ID : (LETTER | UNDERSCORE)+ (UNDERSCORE | NUMBER)*;
 LETTER : [a-zA-Z];
 DIGIT : [0-9];
+/*FIRSTPRIORITYOPERATOR :  '*' | '/' | '%';
+  SECONDPRIORITYOPERATOR : '+' | '-' ;
+  THIRDPRIORITYOPERATOR :   '<' | '<=' | '>' | '>=' ;
+  FOURTHPRIORITYOPERATOR :  '==' | '!=' ;
+  FIFTHPRIORITYOPERATOR :  '||' | '&&' ; */
 OPERATOR : '+' | '-' | '*' | '/' | '%' | '||' | '&&' | '<' | '<=' | '>' | '>=' | '==' | '!=' ;
 NOT : '!';
 EQUAL : '=';

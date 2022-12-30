@@ -31,6 +31,12 @@ interface MiniCVisitor<T> : ParseTreeVisitor<T> {
 	 */
 	fun visitAssignDeclaration(ctx : MiniCParser.AssignDeclarationContext) : T
 	/**
+	 * Visit a parse tree produced by {@link MiniCParser#assign}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	fun visitAssign(ctx : MiniCParser.AssignContext) : T
+	/**
 	 * Visit a parse tree produced by {@link MiniCParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
@@ -55,37 +61,45 @@ interface MiniCVisitor<T> : ParseTreeVisitor<T> {
 	 */
 	fun visitWhileStatement(ctx : MiniCParser.WhileStatementContext) : T
 	/**
-	 * Visit a parse tree produced by the {@code BoolExpr}
-	 * labeled alternative in {@link MiniCParser#expression}.
+	 * Visit a parse tree produced by {@link MiniCParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitBoolExpr(ctx : MiniCParser.BoolExprContext) : T
+	fun visitExpression(ctx : MiniCParser.ExpressionContext) : T
 	/**
-	 * Visit a parse tree produced by the {@code NumberExpr}
-	 * labeled alternative in {@link MiniCParser#expression}.
+	 * Visit a parse tree produced by {@link MiniCParser#e1}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitNumberExpr(ctx : MiniCParser.NumberExprContext) : T
+	fun visitE1(ctx : MiniCParser.E1Context) : T
 	/**
-	 * Visit a parse tree produced by the {@code BracketExpr}
-	 * labeled alternative in {@link MiniCParser#expression}.
+	 * Visit a parse tree produced by {@link MiniCParser#e2}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitBracketExpr(ctx : MiniCParser.BracketExprContext) : T
+	fun visitE2(ctx : MiniCParser.E2Context) : T
 	/**
-	 * Visit a parse tree produced by the {@code AssignExpr}
-	 * labeled alternative in {@link MiniCParser#expression}.
+	 * Visit a parse tree produced by {@link MiniCParser#e3}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitAssignExpr(ctx : MiniCParser.AssignExprContext) : T
+	fun visitE3(ctx : MiniCParser.E3Context) : T
 	/**
-	 * Visit a parse tree produced by {@link MiniCParser#operation}.
+	 * Visit a parse tree produced by {@link MiniCParser#e4}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	fun visitOperation(ctx : MiniCParser.OperationContext) : T
+	fun visitE4(ctx : MiniCParser.E4Context) : T
+	/**
+	 * Visit a parse tree produced by {@link MiniCParser#e5}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	fun visitE5(ctx : MiniCParser.E5Context) : T
+	/**
+	 * Visit a parse tree produced by {@link MiniCParser#e6}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	fun visitE6(ctx : MiniCParser.E6Context) : T
 }

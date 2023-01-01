@@ -1,42 +1,124 @@
+import java.util.Vector
+
 class MiniCEval() : MiniCBaseVisitor<Any>() {
 
-    private var undefinedVar : HashMap<String, String> //these two are for global variable
-    private var memory : HashMap<String,Number>
+    private var undefinedVarBlock: Vector<HashMap<String, String>>
+    private var memoryBlock: Vector<HashMap<String, Number>>
+    private var blockLevel: Int
 
 
     init {
-        memory = HashMap<String, Number>()
-        undefinedVar = HashMap<String, String>()
+        undefinedVarBlock = Vector()
+        memoryBlock = Vector()
+        blockLevel = 0
+        undefinedVarBlock.add(HashMap())
+        memoryBlock.add(HashMap())
     }
 
-    fun getMemory(): HashMap<String, Number> {
-        return this.memory
+    private fun insideUndefinedVar(key: String): Boolean {
+        for (undefinedVar in undefinedVarBlock) {
+            if (undefinedVar.containsKey(key)) {
+                return true
+            }
+        }
+        return false
     }
 
-    fun getUndefinedVar(): HashMap<String, String> {
-        return this.undefinedVar
+    private fun insideMemory(key: String): Boolean {
+        for (memory in memoryBlock) {
+            if (memory.containsKey(key)) {
+                return true
+            }
+        }
+        return false
+    }
+
+    private fun getFromUndefinedVar(key: String): Pair<String, Int>? {
+        for (undefinedVar in undefinedVarBlock) {
+            if (undefinedVar.containsKey(key)) {
+                return Pair(undefinedVar[key]!!, undefinedVarBlock.indexOf(undefinedVar))
+            }
+        }
+        return null
+    }
+
+
+    private fun getFromMemory(key: String): Pair<Number, Int>? {
+        for (memory in memoryBlock) {
+            if (memory.containsKey(key)) {
+                return Pair(memory[key]!!, memoryBlock.indexOf(memory))
+            }
+        }
+        return null
+    }
+
+    // ---------------------------------------------------------------------------------------//
+    //use for test only
+    fun insertInMemoryAtCurrentLevel(key: String, value: Number) {
+        memoryBlock[blockLevel][key] = value
+    }
+
+    fun insertInUndefinedAtCurrentLevel(key: String, type: String) {
+        undefinedVarBlock[blockLevel][key] = type
+    }
+
+    fun insertInMemoryAtNextLevel(key: String, value: Number) {
+        memoryBlock.add(HashMap())
+        memoryBlock[blockLevel+1][key] = value
+    }
+
+    fun insertInUndefinedAtNextLevel(key: String, type: String) {
+        undefinedVarBlock.add(HashMap())
+        undefinedVarBlock[blockLevel+1][key] = type
+    }
+
+    fun purgeAllMemory(){
+        memoryBlock.removeAllElements()
+        undefinedVarBlock.removeAllElements()
+    }
+
+    // ---------------------------------------------------------------------------------------//
+    //stop test use
+
+    private fun removeFromUndefinedVar(key: String): String? {
+        for (undefinedVar in undefinedVarBlock) {
+            return undefinedVar.remove(key)
+        }
+        return null
+    }
+
+    fun getMemoryBlock(): Vector<HashMap<String, Number>> {
+        return this.memoryBlock
+    }
+
+    fun getUndefinedVarBlock(): Vector<HashMap<String, String>> {
+        return this.undefinedVarBlock
     }
 
 
     override fun visitAssign(ctx: MiniCParser.AssignContext): Double {
         val id = ctx.ID()!!.text
         val value = this.visit(ctx.getChild(2)!!) as Double
-        if (undefinedVar.containsKey(id)) {
-            if (undefinedVar[id] == "int") {
-                memory[id] = value.toInt()
-                undefinedVar.remove(id)
+        if (insideUndefinedVar(id)) {
+            val type = getFromUndefinedVar(id)!!.first
+            val level = getFromUndefinedVar(id)!!.second
+            if (type == "int") {
+                memoryBlock[level][id] = value.toInt()
             } else {
-                memory[id] = value
-                undefinedVar.remove(id)
+                memoryBlock[level][id] = value
+
             }
-        } else if (memory.containsKey(id)) {
-            if (memory[id] is Int) {
-                memory[id] = value.toInt()
+            removeFromUndefinedVar(id)
+        } else if (insideMemory(id)) {
+            val number = getFromMemory(id)!!.first
+            val level = getFromMemory(id)!!.second
+            if (number is Int) {
+                memoryBlock[level][id] = value.toInt()
             } else {
-                memory[id] = value
+                memoryBlock[level][id] = value
             }
-        }else {
-            //exception
+        } else {
+            print("undefined variable $id")
             return 0.0
         }
         return value
@@ -49,59 +131,71 @@ class MiniCEval() : MiniCBaseVisitor<Any>() {
     }
 
     override fun visitSimpleDeclaration(ctx: MiniCParser.SimpleDeclarationContext) {
-        undefinedVar[ctx.ID()!!.text] = ctx.TYPE()!!.text
+        undefinedVarBlock[blockLevel][ctx.ID()!!.text] = ctx.TYPE()!!.text
     }
 
     override fun visitAssignDeclaration(ctx: MiniCParser.AssignDeclarationContext) {
         val id = ctx.ID()!!.text
-        if (undefinedVar.containsKey(id)) {
-            println("exception can not declare $id two times")
-        } //exception cannot declare the same variable 2 times
+        if (insideUndefinedVar(id)) {
+            throw DoubleDeclarationException("you cannot declare $id more than once")
+        }
         val type = ctx.TYPE()!!.text
         val value: Number = this.visit(ctx.findExpression()!!) as Number
-        if (type == "int") {
-            memory[id] = value.toInt()
-        } else if (type == "double") {
-            memory[id] = value.toDouble()
-        } else {
-            //exception?
+        when(type){
+            "int" -> memoryBlock[blockLevel][id] = value.toInt()
+            "double" ->  memoryBlock[blockLevel][id] = value.toDouble()
+            else -> throw InvalidTypeException()
         }
     }
 
     override fun visitStatement(ctx: MiniCParser.StatementContext) {
-        if (ctx.text == ";") return
         this.visit(ctx.getChild(0)!!)
-        return
     }
 
     override fun visitBlockStatement(ctx: MiniCParser.BlockStatementContext) {
-        if (ctx.findStatement().isNotEmpty()) {
-            for (statement in ctx.findStatement()) {
-                this.visit(statement)
-            }
-        } else if (ctx.findDeclaration().isNotEmpty()) {
+        blockLevel++
+        undefinedVarBlock.add(HashMap())
+        memoryBlock.add(HashMap())
+        if (ctx.findDeclaration().isNotEmpty()) {
             for (declaration in ctx.findDeclaration()) {
                 this.visit(declaration)
             }
         }
-        return //implement the block scope
+        if (ctx.findStatement().isNotEmpty()) {
+            for (statement in ctx.findStatement()) {
+                this.visit(statement)
+            }
+        }
+        memoryBlock.removeAt(blockLevel)
+        undefinedVarBlock.removeAt(blockLevel)
+        blockLevel--
     }
 
-    override fun visitIfStatement(ctx: MiniCParser.IfStatementContext) {
-        val cond: Number = this.visit(ctx.getChild(2)!!) as Int
-        if (cond != 0) {
+    override fun visitIfStatement(ctx: MiniCParser.IfStatementContext) { //non so per quale motivo non fa l'else
+        blockLevel++
+        undefinedVarBlock.add(HashMap())
+        memoryBlock.add(HashMap())
+        val cond: Number = this.visit(ctx.getChild(2)!!) as Double
+        if (cond != 0.0) {
             this.visit(ctx.findStatement()[0])
         } else if (ctx.ELSE() != null) {
             this.visit(ctx.findStatement()[1])
         }
-        return
+        memoryBlock.removeAt(blockLevel)
+        undefinedVarBlock.removeAt(blockLevel)
+        blockLevel--
     }
 
     override fun visitWhileStatement(ctx: MiniCParser.WhileStatementContext) {
-        while(this.visit(ctx.getChild(2)!!) as Number != 0.0){
+        blockLevel++
+        undefinedVarBlock.add(HashMap())
+        memoryBlock.add(HashMap())
+        while (this.visit(ctx.getChild(2)!!) as Number != 0.0) {
             this.visit(ctx.findStatement()!!)
-            print(ctx.getChild(2)!!.text)
         }
+        memoryBlock.removeAt(blockLevel)
+        undefinedVarBlock.removeAt(blockLevel)
+        blockLevel--
     }
 
     override fun visitExpression(ctx: MiniCParser.ExpressionContext): Double {
@@ -129,18 +223,31 @@ class MiniCEval() : MiniCBaseVisitor<Any>() {
                 ">" -> res = if (res > this.visit(e3) as Double) 1.0 else 0.0
                 ">=" -> res = if (res >= this.visit(e3) as Double) 1.0 else 0.0
                 "==" -> res = if (res == this.visit(e3) as Double) 1.0 else 0.0
-                "!=" -> res = if (res <= this.visit(e3) as Double) 1.0 else 0.0
+                "!=" -> res = if (res != this.visit(e3) as Double) 1.0 else 0.0
             }
         }
         return res
     }
 
     override fun visitE3(ctx: MiniCParser.E3Context): Double {
-        var res = this.visit(ctx.findE4(0)!!) as Double
-        for (e4 in ctx.findE4().drop(1)) {
+        var res : Double
+        if(ctx.findE4().size == 1 && ctx.op==null) {
+            res = this.visit(ctx.findE4(0)!!) as Double
+        }
+        else if (ctx.findE4().size == 1 && ctx.op != null){
+            res = 0.0
             when (ctx.op!!.text) {
-                "+" -> res += this.visit(e4) as Double
-                "-" -> res -= this.visit(e4) as Double
+                "+" -> res += this.visit(ctx.findE4(0)!!) as Double
+                "-" -> res -= this.visit(ctx.findE4(0)!!) as Double
+            }
+        }
+        else {
+            res = this.visit(ctx.findE4(0)!!) as Double
+            for (e4 in ctx.findE4().drop(1)) {
+                when (ctx.op!!.text) {
+                    "+" -> res += this.visit(e4) as Double
+                    "-" -> res -= this.visit(e4) as Double
+                }
             }
         }
         return res
@@ -160,7 +267,7 @@ class MiniCEval() : MiniCBaseVisitor<Any>() {
 
     override fun visitE5(ctx: MiniCParser.E5Context): Double {
         return if (ctx.NOT() != null) {
-            if (this.visit(ctx.findE6()!!) == 0.0) 1.0 else 0.0
+            if (this.visit(ctx.findE5()!!) == 0.0) 1.0 else 0.0
         } else {
             this.visit(ctx.findE6()!!) as Double
         }
@@ -172,10 +279,11 @@ class MiniCEval() : MiniCBaseVisitor<Any>() {
         } else if (ctx.NUMBER() != null) {
             return ctx.NUMBER()!!.text.toDouble()
         } else if (ctx.ID() != null) {
-            if (memory.containsKey(ctx.ID()!!.text)) {
-                return memory[ctx.ID()!!.text]!!.toDouble()
+            if (insideMemory(ctx.ID()!!.text)) {
+                val level = getFromMemory(ctx.ID()!!.text)!!.second
+                return memoryBlock[level][ctx.ID()!!.text]!!.toDouble()
             } else {
-                println("exception " + ctx.ID()!!.text + " is undefined")//exception
+                throw UndefinedVariableException("${ctx.ID()} is undefined")
             }
         }
         return this.visit(ctx.findExpression()!!) as Double

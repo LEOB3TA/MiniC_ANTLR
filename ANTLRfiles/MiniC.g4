@@ -12,14 +12,12 @@ statement : ENDOFINSTRUCTION | (assign | expression) ENDOFINSTRUCTION | blockSta
 blockStatement : CBRACKETOPEN declaration* statement* CBRACKETCLOSE;
 ifStatement : IF RBRACKETOPEN (assign | expression) RBRACKETCLOSE statement (ELSE statement)?;
 whileStatement : WHILE RBRACKETOPEN (assign | expression) RBRACKETCLOSE statement;
-
 expression : e1 ( OR e1)* ;
 e1 : e2 ( AND e2 )* ;
 e2 : e3  (op=(MINOR | MINOREQUAL | MAJOR | MAJOREQUAL | ISEQUAL | ISNOTEQUAL) e3 )* ;
-e3 : e4 ( op=(PLUS | MINUS) e4 )* ;
+e3 : e4? ( op=(PLUS | MINUS) e4 )* ;
 e4 : e5  ( op=(TIMES | DIVIDED | MODULE) e5 )* ;
 e5 : e6 | NOT e5 ;
 e6 : BOOL | NUMBER | ID | RBRACKETOPEN expression RBRACKETCLOSE;
-
 
 

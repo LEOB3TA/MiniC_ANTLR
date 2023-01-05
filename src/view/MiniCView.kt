@@ -9,7 +9,7 @@ import java.io.File
 import kotlin.system.exitProcess
 
 class MiniCView : View("MiniC") {
-    private val controller: MiniCController by inject()
+     private val controller= MiniCController()
     override val root = vbox {
         minWidth = 800.0
         minHeight = 800.0

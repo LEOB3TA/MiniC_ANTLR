@@ -4,12 +4,11 @@ import javafx.beans.property.SimpleStringProperty
 import model.*
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
-import org.antlr.v4.kotlinruntime.tree.ParseTree
 import org.antlr.v4.kotlinruntime.tree.Trees
-import tornadofx.Controller
+import org.antlr.v4.kotlinruntime.tree.*
 
+class MiniCController  {
 
-class MiniCController : Controller()  {
 
     var inputText = SimpleStringProperty("")
     var outputText = SimpleStringProperty("")

@@ -13,14 +13,18 @@ This is small compiler for a little set of C
 
 ## Dependencies
 
-You have to install **Java JDK 17** on your computer
+You have to install **Java JRE** on your computer
 
 ## Instructions
 
-- Download the .jar file from the release
-- Execute it with: 
+- Download the .jar file for your OS from the release
+- In Linux make it executable by:
 ```bash
-java -jar MiniC_ANTLR.jar
+chmod +x Mini_ANTLR_Linux_x64.jar
+```
+- Execute it by double-clicking it, or in alternative you can use:
+```bash
+java -jar MiniC_ANTLR_<your-version>.jar
 ```
 
 # Usage

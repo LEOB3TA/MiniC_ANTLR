@@ -9,7 +9,7 @@ import java.io.File
 import kotlin.system.exitProcess
 
 class MiniCView : View("MiniC") {
-     private val controller= MiniCController()
+    private val controller = MiniCController()
     override val root = vbox {
         minWidth = 800.0
         minHeight = 800.0
@@ -17,26 +17,36 @@ class MiniCView : View("MiniC") {
             menu("File") {
                 item("Open", "Shortcut+O") {
                     action {
-                        val file = chooseFile("Select file to open", arrayOf(FileChooser.ExtensionFilter("Text Files","*.c","*.txt")),
-                            File(System.getProperty("user.dir")),FileChooserMode.Single)
-                        if(file.isNotEmpty())
-                            controller.outputText.value=""
-                            controller.inputText.value=file[0].readText()
+                        val file = chooseFile(
+                            "Select file to open", arrayOf(FileChooser.ExtensionFilter("Text Files", "*.c", "*.txt")),
+                            File(System.getProperty("user.dir")), FileChooserMode.Single
+                        )
+                        if (file.isNotEmpty())
+                            controller.outputText.value = ""
+                        controller.inputText.value = file[0].readText()
                     }
                 }
-                item("Save Input", "Shortcut+L"){
+                item("Save Input", "Shortcut+L") {
                     action {
-                        val file = chooseFile("Select where to save the input", arrayOf(FileChooser.ExtensionFilter("Text Files","*.c","*.txt")),
-                            File(System.getProperty("user.dir")),FileChooserMode.Save)
-                        if(file.isNotEmpty())
+                        val file = chooseFile(
+                            "Select where to save the input",
+                            arrayOf(FileChooser.ExtensionFilter("Text Files", "*.c", "*.txt")),
+                            File(System.getProperty("user.dir")),
+                            FileChooserMode.Save
+                        )
+                        if (file.isNotEmpty())
                             file[0].writeText(controller.inputText.value)
                     }
                 }
                 item("Save Output", "Shortcut+K") {
                     action {
-                        val file = chooseFile("Select where to save the output", arrayOf(FileChooser.ExtensionFilter("Text Files","*.c","*.txt")),
-                            File(System.getProperty("user.dir")),FileChooserMode.Save)
-                        if(file.isNotEmpty())
+                        val file = chooseFile(
+                            "Select where to save the output",
+                            arrayOf(FileChooser.ExtensionFilter("Text Files", "*.c", "*.txt")),
+                            File(System.getProperty("user.dir")),
+                            FileChooserMode.Save
+                        )
+                        if (file.isNotEmpty())
                             file[0].writeText(controller.outputText.value)
                     }
                 }
@@ -75,15 +85,15 @@ class MiniCView : View("MiniC") {
         }
 
         label("input area:")
-        textarea{
+        textarea {
             this.bind(controller.inputText)
             fitToParentSize()
         }
         label("output area")
-        textarea{
+        textarea {
             this.bind(controller.outputText)
             fitToParentSize()
-            isEditable=false
+            isEditable = false
         }
     }
 

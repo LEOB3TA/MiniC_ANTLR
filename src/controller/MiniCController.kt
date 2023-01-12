@@ -72,23 +72,37 @@ class MiniCController  {
         if(check()){
             val charStream = CharStreams.fromString(inputText.value)
             val miniCLexer = MiniCLexer(charStream)
-            val miniCParser = MiniCParser(CommonTokenStream(miniCLexer))
+            val miniCTokenStream = CommonTokenStream(miniCLexer)
+            val miniCParser = MiniCParser(miniCTokenStream)
             outputText.value= format(miniCParser,1,miniCParser.program())
         }
 
     }
 
     private fun format(parser: MiniCParser, indent: Int = 0, tree: ParseTree): String = buildString {
-        val prefix = "  ".repeat(indent)
-        append(prefix)
-        append(Trees.getNodeText(tree, parser))
-        if (tree.childCount != 0) {
-            append(" (\n")
+        if(tree.text == ";" || tree.text == "(" || tree.text == ")" || tree.text == "{" || tree.text == "}"){
+            return@buildString
+        }
+        var prefix = "     ".repeat(indent)
+        if(Trees.getNodeText(tree, parser).matches("e[1-6]".toRegex())){
             for (i in 0 until tree.childCount) {
-                append(format(parser, indent + 1, tree.getChild(i)!!))
+                append(format(parser, indent, tree.getChild(i)!!))
+            }
+        }
+        else {
+            append(Trees.getNodeText(tree, parser))
+            if(Trees.getNodeText(tree, parser) == "expression"){
+                prefix= "$prefix          "
+            }
+            if (tree.childCount != 0) {
+                prefix=prefix.repeat(2)
+                append("\n$prefix|\n$prefix|\n$prefix|\n$prefix|__")
+                for (i in 0 until tree.childCount) {
+                    append(format(parser, indent + 1, tree.getChild(i)!!))
+                    append(" ")
+                }
                 append("\n")
             }
-            append(prefix).append(")")
         }
     }
 }

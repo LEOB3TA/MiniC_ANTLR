@@ -21,9 +21,10 @@ class MiniCView : View("MiniC") {
                             "Select file to open", arrayOf(FileChooser.ExtensionFilter("Text Files", "*.c", "*.txt")),
                             File(System.getProperty("user.dir")), FileChooserMode.Single
                         )
-                        if (file.isNotEmpty())
+                        if (file.isNotEmpty()) {
                             controller.outputText.value = ""
-                        controller.inputText.value = file[0].readText()
+                            controller.inputText.value = file[0].readText()
+                        }
                     }
                 }
                 item("Save Input", "Shortcut+L") {

@@ -1,6 +1,7 @@
 package view
 
 import controller.MiniCController
+import javafx.geometry.Orientation
 import javafx.scene.control.Alert
 import javafx.scene.image.Image
 import javafx.stage.FileChooser
@@ -73,8 +74,8 @@ class MiniCView : View("MiniC") {
                         "Help",
                         "Open a issue on Github or send me an email at:\n leonardo.focardi@studio.unibo.it"
                     )
+                    hostServices.showDocument("https://github.com/LEOB3TA/MiniC_ANTLR")
                 }
-                item("GitHub").action { /* TODO hostServices.showDocument("pagina github") */ }
                 item("About").action {
                     alert(
                         Alert.AlertType.INFORMATION,
@@ -84,18 +85,27 @@ class MiniCView : View("MiniC") {
                 }
             }
         }
+        splitpane{
+            orientation = Orientation.VERTICAL
+            fitToParentSize()
+            vbox{
+                label("input area:")
+                textarea {
+                    this.bind(controller.inputText)
+                    fitToParentSize()
+                }
+            }
+            vbox {
+                label("output area")
+                textarea {
+                    this.label("stocazzo")
+                    this.bind(controller.outputText)
+                    fitToParentSize()
+                    isEditable = false
+                }
+            }
+        }
 
-        label("input area:")
-        textarea {
-            this.bind(controller.inputText)
-            fitToParentSize()
-        }
-        label("output area")
-        textarea {
-            this.bind(controller.outputText)
-            fitToParentSize()
-            isEditable = false
-        }
     }
 
     init {

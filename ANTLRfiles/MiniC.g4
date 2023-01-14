@@ -6,13 +6,15 @@ options {
 
 
 program : statement*;
-declaration : TYPE ID  #SimpleDeclaration
-            | TYPE ID EQUAL expression  #AssignDeclaration;
+declaration : TYPE ID ENDOFINSTRUCTION #SimpleDeclaration
+            | TYPE ID EQUAL expression ENDOFINSTRUCTION  #AssignDeclaration;
 assign : ID EQUAL (assign | expression);
-statement : ENDOFINSTRUCTION | ( assign | expression |  declaration ) ENDOFINSTRUCTION | blockStatement | ifStatement | whileStatement;
+statement : ENDOFINSTRUCTION | ( assign | expression | printfStatement | scanfStatement  ) ENDOFINSTRUCTION | blockStatement | ifStatement | whileStatement | declaration;
+printfStatement : PRINTF RBRACKETOPEN STRING_CHAR (COMMA ID)* RBRACKETCLOSE;
+scanfStatement : SCANF RBRACKETOPEN STRING_CHAR (COMMA ID)* RBRACKETCLOSE;
 blockStatement : CBRACKETOPEN declaration* statement* CBRACKETCLOSE;
-ifStatement : IF RBRACKETOPEN (assign | expression) RBRACKETCLOSE statement (ELSE statement)?;
-whileStatement : WHILE RBRACKETOPEN (assign | expression) RBRACKETCLOSE statement;
+ifStatement : IF RBRACKETOPEN ( assign | expression | printfStatement | scanfStatement  ) RBRACKETCLOSE statement (ELSE statement)?;
+whileStatement : WHILE RBRACKETOPEN ( assign | expression | printfStatement | scanfStatement  ) RBRACKETCLOSE statement;
 expression : e1 ( OR e1)* ;
 e1 : e2 ( AND e2 )* ;
 e2 : e3  (op=(MINOR | MINOREQUAL | MAJOR | MAJOREQUAL | ISEQUAL | ISNOTEQUAL) e3 )* ;

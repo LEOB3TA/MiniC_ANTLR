@@ -1,20 +1,19 @@
 package model// Generated from java-escape by ANTLR 4.7.1
 import com.strumenta.kotlinmultiplatform.Arrays
-import com.strumenta.kotlinmultiplatform.TypeDeclarator
 import com.strumenta.kotlinmultiplatform.getType
-import com.strumenta.kotlinmultiplatform.toCharArray
+import com.strumenta.kotlinmultiplatform.TypeDeclarator
 import org.antlr.v4.kotlinruntime.*
-import org.antlr.v4.kotlinruntime.atn.ATN
-import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
+import org.antlr.v4.kotlinruntime.atn.*
 import org.antlr.v4.kotlinruntime.atn.ATNDeserializer
 import org.antlr.v4.kotlinruntime.atn.ParserATNSimulator
 import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
-import org.antlr.v4.kotlinruntime.dfa.DFA
-import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
+import org.antlr.v4.kotlinruntime.dfa.*
 import org.antlr.v4.kotlinruntime.tree.TerminalNode
+import org.antlr.v4.kotlinruntime.atn.ATN.Companion.INVALID_ALT_NUMBER
+import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
+import com.strumenta.kotlinmultiplatform.toCharArray
 import kotlin.reflect.KClass
 
-@Suppress("all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue")
 class MiniCParser(input: TokenStream) : Parser(input) {
 
     object solver : TypeDeclarator {
@@ -23,6 +22,8 @@ class MiniCParser(input: TokenStream) : Parser(input) {
                                                               DeclarationContext::class,
                                                               AssignContext::class,
                                                               StatementContext::class,
+                                                              PrintfStatementContext::class,
+                                                              ScanfStatementContext::class,
                                                               BlockStatementContext::class,
                                                               IfStatementContext::class,
                                                               WhileStatementContext::class,
@@ -58,31 +59,36 @@ class MiniCParser(input: TokenStream) : Parser(input) {
         WORD_END(7),
         COMMENT(8),
         LINE_COMMENT(9),
-        ID(10),
-        TIMES(11),
-        DIVIDED(12),
-        MODULE(13),
-        PLUS(14),
-        MINUS(15),
-        MINOR(16),
-        MINOREQUAL(17),
-        MAJOR(18),
-        MAJOREQUAL(19),
-        ISEQUAL(20),
-        ISNOTEQUAL(21),
-        OR(22),
-        AND(23),
-        NOT(24),
-        EQUAL(25),
-        ENDOFINSTRUCTION(26),
-        NUMBER(27),
-        LETTER(28),
-        DIGIT(29),
-        UNDERSCORE(30),
-        RBRACKETOPEN(31),
-        RBRACKETCLOSE(32),
-        CBRACKETOPEN(33),
-        CBRACKETCLOSE(34)
+        PRINTF(10),
+        SCANF(11),
+        STRING_CHAR(12),
+        PLACEHOLDER(13),
+        ID(14),
+        TIMES(15),
+        DIVIDED(16),
+        MODULE(17),
+        PLUS(18),
+        MINUS(19),
+        MINOR(20),
+        MINOREQUAL(21),
+        MAJOR(22),
+        MAJOREQUAL(23),
+        ISEQUAL(24),
+        ISNOTEQUAL(25),
+        OR(26),
+        AND(27),
+        NOT(28),
+        EQUAL(29),
+        ENDOFINSTRUCTION(30),
+        NUMBER(31),
+        LETTER(32),
+        DIGIT(33),
+        COMMA(34),
+        UNDERSCORE(35),
+        RBRACKETOPEN(36),
+        RBRACKETCLOSE(37),
+        CBRACKETOPEN(38),
+        CBRACKETCLOSE(39)
     }
 
     enum class Rules(val id: Int) {
@@ -90,16 +96,18 @@ class MiniCParser(input: TokenStream) : Parser(input) {
         RULE_declaration(1),
         RULE_assign(2),
         RULE_statement(3),
-        RULE_blockStatement(4),
-        RULE_ifStatement(5),
-        RULE_whileStatement(6),
-        RULE_expression(7),
-        RULE_e1(8),
-        RULE_e2(9),
-        RULE_e3(10),
-        RULE_e4(11),
-        RULE_e5(12),
-        RULE_e6(13)
+        RULE_printfStatement(4),
+        RULE_scanfStatement(5),
+        RULE_blockStatement(6),
+        RULE_ifStatement(7),
+        RULE_whileStatement(8),
+        RULE_expression(9),
+        RULE_e1(10),
+        RULE_e2(11),
+        RULE_e3(12),
+        RULE_e4(13),
+        RULE_e5(14),
+        RULE_e6(15)
     }
 
 	companion object {
@@ -107,23 +115,25 @@ class MiniCParser(input: TokenStream) : Parser(input) {
     	protected val sharedContextCache = PredictionContextCache()
 
         val ruleNames = arrayOf("program", "declaration", "assign", "statement", 
-                                "blockStatement", "ifStatement", "whileStatement", 
-                                "expression", "e1", "e2", "e3", "e4", "e5", 
-                                "e6")
+                                "printfStatement", "scanfStatement", "blockStatement", 
+                                "ifStatement", "whileStatement", "expression", 
+                                "e1", "e2", "e3", "e4", "e5", "e6")
 
         private val LITERAL_NAMES = Arrays.asList<String?>(null, null, "'if'", 
                                                            "'else'", "'while'", 
                                                            null, null, "' '", 
-                                                           null, null, null, 
-                                                           "'*'", "'/'", 
-                                                           "'%'", "'+'", 
-                                                           "'-'", "'<'", 
-                                                           "'<='", "'>'", 
-                                                           "'>='", "'=='", 
-                                                           "'!='", "'||'", 
-                                                           "'&&'", "'!'", 
-                                                           "'='", "';'", 
-                                                           null, null, null, 
+                                                           null, null, "'printf'", 
+                                                           "'scanf'", null, 
+                                                           null, null, "'*'", 
+                                                           "'/'", "'%'", 
+                                                           "'+'", "'-'", 
+                                                           "'<'", "'<='", 
+                                                           "'>'", "'>='", 
+                                                           "'=='", "'!='", 
+                                                           "'||'", "'&&'", 
+                                                           "'!'", "'='", 
+                                                           "';'", null, 
+                                                           null, null, "','", 
                                                            "'_'", "'('", 
                                                            "')'", "'{'", 
                                                            "'}'")
@@ -132,6 +142,9 @@ class MiniCParser(input: TokenStream) : Parser(input) {
                                                             "WHILE", "TYPE", 
                                                             "WS", "WORD_END", 
                                                             "COMMENT", "LINE_COMMENT", 
+                                                            "PRINTF", "SCANF", 
+                                                            "STRING_CHAR", 
+                                                            "PLACEHOLDER", 
                                                             "ID", "TIMES", 
                                                             "DIVIDED", "MODULE", 
                                                             "PLUS", "MINUS", 
@@ -142,7 +155,8 @@ class MiniCParser(input: TokenStream) : Parser(input) {
                                                             "NOT", "EQUAL", 
                                                             "ENDOFINSTRUCTION", 
                                                             "NUMBER", "LETTER", 
-                                                            "DIGIT", "UNDERSCORE", 
+                                                            "DIGIT", "COMMA", 
+                                                            "UNDERSCORE", 
                                                             "RBRACKETOPEN", 
                                                             "RBRACKETCLOSE", 
                                                             "CBRACKETOPEN", 
@@ -162,7 +176,7 @@ class MiniCParser(input: TokenStream) : Parser(input) {
             el
         }
 
-        private const val serializedATN : String = "\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\u0003\u0024\u009c\u0004\u0002\u0009\u0002\u0004\u0003\u0009\u0003\u0004\u0004\u0009\u0004\u0004\u0005\u0009\u0005\u0004\u0006\u0009\u0006\u0004\u0007\u0009\u0007\u0004\u0008\u0009\u0008\u0004\u0009\u0009\u0009\u0004\u000a\u0009\u000a\u0004\u000b\u0009\u000b\u0004\u000c\u0009\u000c\u0004\u000d\u0009\u000d\u0004\u000e\u0009\u000e\u0004\u000f\u0009\u000f\u0003\u0002\u0007\u0002\u0020\u000a\u0002\u000c\u0002\u000e\u0002\u0023\u000b\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0005\u0003\u002b\u000a\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0005\u0004\u0031\u000a\u0004\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0005\u0005\u0037\u000a\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0005\u0005\u003e\u000a\u0005\u0003\u0006\u0003\u0006\u0007\u0006\u0042\u000a\u0006\u000c\u0006\u000e\u0006\u0045\u000b\u0006\u0003\u0006\u0007\u0006\u0048\u000a\u0006\u000c\u0006\u000e\u0006\u004b\u000b\u0006\u0003\u0006\u0003\u0006\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0005\u0007\u0053\u000a\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0005\u0007\u0059\u000a\u0007\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0005\u0008\u005f\u000a\u0008\u0003\u0008\u0003\u0008\u0003\u0008\u0003\u0009\u0003\u0009\u0003\u0009\u0007\u0009\u0067\u000a\u0009\u000c\u0009\u000e\u0009\u006a\u000b\u0009\u0003\u000a\u0003\u000a\u0003\u000a\u0007\u000a\u006f\u000a\u000a\u000c\u000a\u000e\u000a\u0072\u000b\u000a\u0003\u000b\u0003\u000b\u0003\u000b\u0007\u000b\u0077\u000a\u000b\u000c\u000b\u000e\u000b\u007a\u000b\u000b\u0003\u000c\u0005\u000c\u007d\u000a\u000c\u0003\u000c\u0003\u000c\u0007\u000c\u0081\u000a\u000c\u000c\u000c\u000e\u000c\u0084\u000b\u000c\u0003\u000d\u0003\u000d\u0003\u000d\u0007\u000d\u0089\u000a\u000d\u000c\u000d\u000e\u000d\u008c\u000b\u000d\u0003\u000e\u0003\u000e\u0003\u000e\u0005\u000e\u0091\u000a\u000e\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0003\u000f\u0005\u000f\u009a\u000a\u000f\u0003\u000f\u0002\u0002\u0010\u0002\u0004\u0006\u0008\u000a\u000c\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u0002\u0005\u0003\u0002\u0012\u0017\u0003\u0002\u0010\u0011\u0003\u0002\u000d\u000f\u0002\u00a5\u0002\u0021\u0003\u0002\u0002\u0002\u0004\u002a\u0003\u0002\u0002\u0002\u0006\u002c\u0003\u0002\u0002\u0002\u0008\u003d\u0003\u0002\u0002\u0002\u000a\u003f\u0003\u0002\u0002\u0002\u000c\u004e\u0003\u0002\u0002\u0002\u000e\u005a\u0003\u0002\u0002\u0002\u0010\u0063\u0003\u0002\u0002\u0002\u0012\u006b\u0003\u0002\u0002\u0002\u0014\u0073\u0003\u0002\u0002\u0002\u0016\u007c\u0003\u0002\u0002\u0002\u0018\u0085\u0003\u0002\u0002\u0002\u001a\u0090\u0003\u0002\u0002\u0002\u001c\u0099\u0003\u0002\u0002\u0002\u001e\u0020\u0005\u0008\u0005\u0002\u001f\u001e\u0003\u0002\u0002\u0002\u0020\u0023\u0003\u0002\u0002\u0002\u0021\u001f\u0003\u0002\u0002\u0002\u0021\u0022\u0003\u0002\u0002\u0002\u0022\u0003\u0003\u0002\u0002\u0002\u0023\u0021\u0003\u0002\u0002\u0002\u0024\u0025\u0007\u0007\u0002\u0002\u0025\u002b\u0007\u000c\u0002\u0002\u0026\u0027\u0007\u0007\u0002\u0002\u0027\u0028\u0007\u000c\u0002\u0002\u0028\u0029\u0007\u001b\u0002\u0002\u0029\u002b\u0005\u0010\u0009\u0002\u002a\u0024\u0003\u0002\u0002\u0002\u002a\u0026\u0003\u0002\u0002\u0002\u002b\u0005\u0003\u0002\u0002\u0002\u002c\u002d\u0007\u000c\u0002\u0002\u002d\u0030\u0007\u001b\u0002\u0002\u002e\u0031\u0005\u0006\u0004\u0002\u002f\u0031\u0005\u0010\u0009\u0002\u0030\u002e\u0003\u0002\u0002\u0002\u0030\u002f\u0003\u0002\u0002\u0002\u0031\u0007\u0003\u0002\u0002\u0002\u0032\u003e\u0007\u001c\u0002\u0002\u0033\u0037\u0005\u0006\u0004\u0002\u0034\u0037\u0005\u0010\u0009\u0002\u0035\u0037\u0005\u0004\u0003\u0002\u0036\u0033\u0003\u0002\u0002\u0002\u0036\u0034\u0003\u0002\u0002\u0002\u0036\u0035\u0003\u0002\u0002\u0002\u0037\u0038\u0003\u0002\u0002\u0002\u0038\u0039\u0007\u001c\u0002\u0002\u0039\u003e\u0003\u0002\u0002\u0002\u003a\u003e\u0005\u000a\u0006\u0002\u003b\u003e\u0005\u000c\u0007\u0002\u003c\u003e\u0005\u000e\u0008\u0002\u003d\u0032\u0003\u0002\u0002\u0002\u003d\u0036\u0003\u0002\u0002\u0002\u003d\u003a\u0003\u0002\u0002\u0002\u003d\u003b\u0003\u0002\u0002\u0002\u003d\u003c\u0003\u0002\u0002\u0002\u003e\u0009\u0003\u0002\u0002\u0002\u003f\u0043\u0007\u0023\u0002\u0002\u0040\u0042\u0005\u0004\u0003\u0002\u0041\u0040\u0003\u0002\u0002\u0002\u0042\u0045\u0003\u0002\u0002\u0002\u0043\u0041\u0003\u0002\u0002\u0002\u0043\u0044\u0003\u0002\u0002\u0002\u0044\u0049\u0003\u0002\u0002\u0002\u0045\u0043\u0003\u0002\u0002\u0002\u0046\u0048\u0005\u0008\u0005\u0002\u0047\u0046\u0003\u0002\u0002\u0002\u0048\u004b\u0003\u0002\u0002\u0002\u0049\u0047\u0003\u0002\u0002\u0002\u0049\u004a\u0003\u0002\u0002\u0002\u004a\u004c\u0003\u0002\u0002\u0002\u004b\u0049\u0003\u0002\u0002\u0002\u004c\u004d\u0007\u0024\u0002\u0002\u004d\u000b\u0003\u0002\u0002\u0002\u004e\u004f\u0007\u0004\u0002\u0002\u004f\u0052\u0007\u0021\u0002\u0002\u0050\u0053\u0005\u0006\u0004\u0002\u0051\u0053\u0005\u0010\u0009\u0002\u0052\u0050\u0003\u0002\u0002\u0002\u0052\u0051\u0003\u0002\u0002\u0002\u0053\u0054\u0003\u0002\u0002\u0002\u0054\u0055\u0007\u0022\u0002\u0002\u0055\u0058\u0005\u0008\u0005\u0002\u0056\u0057\u0007\u0005\u0002\u0002\u0057\u0059\u0005\u0008\u0005\u0002\u0058\u0056\u0003\u0002\u0002\u0002\u0058\u0059\u0003\u0002\u0002\u0002\u0059\u000d\u0003\u0002\u0002\u0002\u005a\u005b\u0007\u0006\u0002\u0002\u005b\u005e\u0007\u0021\u0002\u0002\u005c\u005f\u0005\u0006\u0004\u0002\u005d\u005f\u0005\u0010\u0009\u0002\u005e\u005c\u0003\u0002\u0002\u0002\u005e\u005d\u0003\u0002\u0002\u0002\u005f\u0060\u0003\u0002\u0002\u0002\u0060\u0061\u0007\u0022\u0002\u0002\u0061\u0062\u0005\u0008\u0005\u0002\u0062\u000f\u0003\u0002\u0002\u0002\u0063\u0068\u0005\u0012\u000a\u0002\u0064\u0065\u0007\u0018\u0002\u0002\u0065\u0067\u0005\u0012\u000a\u0002\u0066\u0064\u0003\u0002\u0002\u0002\u0067\u006a\u0003\u0002\u0002\u0002\u0068\u0066\u0003\u0002\u0002\u0002\u0068\u0069\u0003\u0002\u0002\u0002\u0069\u0011\u0003\u0002\u0002\u0002\u006a\u0068\u0003\u0002\u0002\u0002\u006b\u0070\u0005\u0014\u000b\u0002\u006c\u006d\u0007\u0019\u0002\u0002\u006d\u006f\u0005\u0014\u000b\u0002\u006e\u006c\u0003\u0002\u0002\u0002\u006f\u0072\u0003\u0002\u0002\u0002\u0070\u006e\u0003\u0002\u0002\u0002\u0070\u0071\u0003\u0002\u0002\u0002\u0071\u0013\u0003\u0002\u0002\u0002\u0072\u0070\u0003\u0002\u0002\u0002\u0073\u0078\u0005\u0016\u000c\u0002\u0074\u0075\u0009\u0002\u0002\u0002\u0075\u0077\u0005\u0016\u000c\u0002\u0076\u0074\u0003\u0002\u0002\u0002\u0077\u007a\u0003\u0002\u0002\u0002\u0078\u0076\u0003\u0002\u0002\u0002\u0078\u0079\u0003\u0002\u0002\u0002\u0079\u0015\u0003\u0002\u0002\u0002\u007a\u0078\u0003\u0002\u0002\u0002\u007b\u007d\u0005\u0018\u000d\u0002\u007c\u007b\u0003\u0002\u0002\u0002\u007c\u007d\u0003\u0002\u0002\u0002\u007d\u0082\u0003\u0002\u0002\u0002\u007e\u007f\u0009\u0003\u0002\u0002\u007f\u0081\u0005\u0018\u000d\u0002\u0080\u007e\u0003\u0002\u0002\u0002\u0081\u0084\u0003\u0002\u0002\u0002\u0082\u0080\u0003\u0002\u0002\u0002\u0082\u0083\u0003\u0002\u0002\u0002\u0083\u0017\u0003\u0002\u0002\u0002\u0084\u0082\u0003\u0002\u0002\u0002\u0085\u008a\u0005\u001a\u000e\u0002\u0086\u0087\u0009\u0004\u0002\u0002\u0087\u0089\u0005\u001a\u000e\u0002\u0088\u0086\u0003\u0002\u0002\u0002\u0089\u008c\u0003\u0002\u0002\u0002\u008a\u0088\u0003\u0002\u0002\u0002\u008a\u008b\u0003\u0002\u0002\u0002\u008b\u0019\u0003\u0002\u0002\u0002\u008c\u008a\u0003\u0002\u0002\u0002\u008d\u0091\u0005\u001c\u000f\u0002\u008e\u008f\u0007\u001a\u0002\u0002\u008f\u0091\u0005\u001a\u000e\u0002\u0090\u008d\u0003\u0002\u0002\u0002\u0090\u008e\u0003\u0002\u0002\u0002\u0091\u001b\u0003\u0002\u0002\u0002\u0092\u009a\u0007\u0003\u0002\u0002\u0093\u009a\u0007\u001d\u0002\u0002\u0094\u009a\u0007\u000c\u0002\u0002\u0095\u0096\u0007\u0021\u0002\u0002\u0096\u0097\u0005\u0010\u0009\u0002\u0097\u0098\u0007\u0022\u0002\u0002\u0098\u009a\u0003\u0002\u0002\u0002\u0099\u0092\u0003\u0002\u0002\u0002\u0099\u0093\u0003\u0002\u0002\u0002\u0099\u0094\u0003\u0002\u0002\u0002\u0099\u0095\u0003\u0002\u0002\u0002\u009a\u001d\u0003\u0002\u0002\u0002\u0014\u0021\u002a\u0030\u0036\u003d\u0043\u0049\u0052\u0058\u005e\u0068\u0070\u0078\u007c\u0082\u008a\u0090\u0099"
+        private const val serializedATN : String = "\u0003\u608b\ua72a\u8133\ub9ed\u417c\u3be7\u7786\u5964\u0003\u0029\u00c1\u0004\u0002\u0009\u0002\u0004\u0003\u0009\u0003\u0004\u0004\u0009\u0004\u0004\u0005\u0009\u0005\u0004\u0006\u0009\u0006\u0004\u0007\u0009\u0007\u0004\u0008\u0009\u0008\u0004\u0009\u0009\u0009\u0004\u000a\u0009\u000a\u0004\u000b\u0009\u000b\u0004\u000c\u0009\u000c\u0004\u000d\u0009\u000d\u0004\u000e\u0009\u000e\u0004\u000f\u0009\u000f\u0004\u0010\u0009\u0010\u0004\u0011\u0009\u0011\u0003\u0002\u0007\u0002\u0024\u000a\u0002\u000c\u0002\u000e\u0002\u0027\u000b\u0002\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0003\u0005\u0003\u0032\u000a\u0003\u0003\u0004\u0003\u0004\u0003\u0004\u0003\u0004\u0005\u0004\u0038\u000a\u0004\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0005\u0005\u003f\u000a\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0003\u0005\u0005\u0005\u0047\u000a\u0005\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0003\u0006\u0007\u0006\u004e\u000a\u0006\u000c\u0006\u000e\u0006\u0051\u000b\u0006\u0003\u0006\u0003\u0006\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0003\u0007\u0007\u0007\u005a\u000a\u0007\u000c\u0007\u000e\u0007\u005d\u000b\u0007\u0003\u0007\u0003\u0007\u0003\u0008\u0003\u0008\u0007\u0008\u0063\u000a\u0008\u000c\u0008\u000e\u0008\u0066\u000b\u0008\u0003\u0008\u0007\u0008\u0069\u000a\u0008\u000c\u0008\u000e\u0008\u006c\u000b\u0008\u0003\u0008\u0003\u0008\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0005\u0009\u0076\u000a\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0003\u0009\u0005\u0009\u007c\u000a\u0009\u0003\u000a\u0003\u000a\u0003\u000a\u0003\u000a\u0003\u000a\u0003\u000a\u0005\u000a\u0084\u000a\u000a\u0003\u000a\u0003\u000a\u0003\u000a\u0003\u000b\u0003\u000b\u0003\u000b\u0007\u000b\u008c\u000a\u000b\u000c\u000b\u000e\u000b\u008f\u000b\u000b\u0003\u000c\u0003\u000c\u0003\u000c\u0007\u000c\u0094\u000a\u000c\u000c\u000c\u000e\u000c\u0097\u000b\u000c\u0003\u000d\u0003\u000d\u0003\u000d\u0007\u000d\u009c\u000a\u000d\u000c\u000d\u000e\u000d\u009f\u000b\u000d\u0003\u000e\u0005\u000e\u00a2\u000a\u000e\u0003\u000e\u0003\u000e\u0007\u000e\u00a6\u000a\u000e\u000c\u000e\u000e\u000e\u00a9\u000b\u000e\u0003\u000f\u0003\u000f\u0003\u000f\u0007\u000f\u00ae\u000a\u000f\u000c\u000f\u000e\u000f\u00b1\u000b\u000f\u0003\u0010\u0003\u0010\u0003\u0010\u0005\u0010\u00b6\u000a\u0010\u0003\u0011\u0003\u0011\u0003\u0011\u0003\u0011\u0003\u0011\u0003\u0011\u0003\u0011\u0005\u0011\u00bf\u000a\u0011\u0003\u0011\u0002\u0002\u0012\u0002\u0004\u0006\u0008\u000a\u000c\u000e\u0010\u0012\u0014\u0016\u0018\u001a\u001c\u001e\u0020\u0002\u0005\u0003\u0002\u0016\u001b\u0003\u0002\u0014\u0015\u0003\u0002\u0011\u0013\u0002\u00d0\u0002\u0025\u0003\u0002\u0002\u0002\u0004\u0031\u0003\u0002\u0002\u0002\u0006\u0033\u0003\u0002\u0002\u0002\u0008\u0046\u0003\u0002\u0002\u0002\u000a\u0048\u0003\u0002\u0002\u0002\u000c\u0054\u0003\u0002\u0002\u0002\u000e\u0060\u0003\u0002\u0002\u0002\u0010\u006f\u0003\u0002\u0002\u0002\u0012\u007d\u0003\u0002\u0002\u0002\u0014\u0088\u0003\u0002\u0002\u0002\u0016\u0090\u0003\u0002\u0002\u0002\u0018\u0098\u0003\u0002\u0002\u0002\u001a\u00a1\u0003\u0002\u0002\u0002\u001c\u00aa\u0003\u0002\u0002\u0002\u001e\u00b5\u0003\u0002\u0002\u0002\u0020\u00be\u0003\u0002\u0002\u0002\u0022\u0024\u0005\u0008\u0005\u0002\u0023\u0022\u0003\u0002\u0002\u0002\u0024\u0027\u0003\u0002\u0002\u0002\u0025\u0023\u0003\u0002\u0002\u0002\u0025\u0026\u0003\u0002\u0002\u0002\u0026\u0003\u0003\u0002\u0002\u0002\u0027\u0025\u0003\u0002\u0002\u0002\u0028\u0029\u0007\u0007\u0002\u0002\u0029\u002a\u0007\u0010\u0002\u0002\u002a\u0032\u0007\u0020\u0002\u0002\u002b\u002c\u0007\u0007\u0002\u0002\u002c\u002d\u0007\u0010\u0002\u0002\u002d\u002e\u0007\u001f\u0002\u0002\u002e\u002f\u0005\u0014\u000b\u0002\u002f\u0030\u0007\u0020\u0002\u0002\u0030\u0032\u0003\u0002\u0002\u0002\u0031\u0028\u0003\u0002\u0002\u0002\u0031\u002b\u0003\u0002\u0002\u0002\u0032\u0005\u0003\u0002\u0002\u0002\u0033\u0034\u0007\u0010\u0002\u0002\u0034\u0037\u0007\u001f\u0002\u0002\u0035\u0038\u0005\u0006\u0004\u0002\u0036\u0038\u0005\u0014\u000b\u0002\u0037\u0035\u0003\u0002\u0002\u0002\u0037\u0036\u0003\u0002\u0002\u0002\u0038\u0007\u0003\u0002\u0002\u0002\u0039\u0047\u0007\u0020\u0002\u0002\u003a\u003f\u0005\u0006\u0004\u0002\u003b\u003f\u0005\u0014\u000b\u0002\u003c\u003f\u0005\u000a\u0006\u0002\u003d\u003f\u0005\u000c\u0007\u0002\u003e\u003a\u0003\u0002\u0002\u0002\u003e\u003b\u0003\u0002\u0002\u0002\u003e\u003c\u0003\u0002\u0002\u0002\u003e\u003d\u0003\u0002\u0002\u0002\u003f\u0040\u0003\u0002\u0002\u0002\u0040\u0041\u0007\u0020\u0002\u0002\u0041\u0047\u0003\u0002\u0002\u0002\u0042\u0047\u0005\u000e\u0008\u0002\u0043\u0047\u0005\u0010\u0009\u0002\u0044\u0047\u0005\u0012\u000a\u0002\u0045\u0047\u0005\u0004\u0003\u0002\u0046\u0039\u0003\u0002\u0002\u0002\u0046\u003e\u0003\u0002\u0002\u0002\u0046\u0042\u0003\u0002\u0002\u0002\u0046\u0043\u0003\u0002\u0002\u0002\u0046\u0044\u0003\u0002\u0002\u0002\u0046\u0045\u0003\u0002\u0002\u0002\u0047\u0009\u0003\u0002\u0002\u0002\u0048\u0049\u0007\u000c\u0002\u0002\u0049\u004a\u0007\u0026\u0002\u0002\u004a\u004f\u0007\u000e\u0002\u0002\u004b\u004c\u0007\u0024\u0002\u0002\u004c\u004e\u0007\u0010\u0002\u0002\u004d\u004b\u0003\u0002\u0002\u0002\u004e\u0051\u0003\u0002\u0002\u0002\u004f\u004d\u0003\u0002\u0002\u0002\u004f\u0050\u0003\u0002\u0002\u0002\u0050\u0052\u0003\u0002\u0002\u0002\u0051\u004f\u0003\u0002\u0002\u0002\u0052\u0053\u0007\u0027\u0002\u0002\u0053\u000b\u0003\u0002\u0002\u0002\u0054\u0055\u0007\u000d\u0002\u0002\u0055\u0056\u0007\u0026\u0002\u0002\u0056\u005b\u0007\u000e\u0002\u0002\u0057\u0058\u0007\u0024\u0002\u0002\u0058\u005a\u0007\u0010\u0002\u0002\u0059\u0057\u0003\u0002\u0002\u0002\u005a\u005d\u0003\u0002\u0002\u0002\u005b\u0059\u0003\u0002\u0002\u0002\u005b\u005c\u0003\u0002\u0002\u0002\u005c\u005e\u0003\u0002\u0002\u0002\u005d\u005b\u0003\u0002\u0002\u0002\u005e\u005f\u0007\u0027\u0002\u0002\u005f\u000d\u0003\u0002\u0002\u0002\u0060\u0064\u0007\u0028\u0002\u0002\u0061\u0063\u0005\u0004\u0003\u0002\u0062\u0061\u0003\u0002\u0002\u0002\u0063\u0066\u0003\u0002\u0002\u0002\u0064\u0062\u0003\u0002\u0002\u0002\u0064\u0065\u0003\u0002\u0002\u0002\u0065\u006a\u0003\u0002\u0002\u0002\u0066\u0064\u0003\u0002\u0002\u0002\u0067\u0069\u0005\u0008\u0005\u0002\u0068\u0067\u0003\u0002\u0002\u0002\u0069\u006c\u0003\u0002\u0002\u0002\u006a\u0068\u0003\u0002\u0002\u0002\u006a\u006b\u0003\u0002\u0002\u0002\u006b\u006d\u0003\u0002\u0002\u0002\u006c\u006a\u0003\u0002\u0002\u0002\u006d\u006e\u0007\u0029\u0002\u0002\u006e\u000f\u0003\u0002\u0002\u0002\u006f\u0070\u0007\u0004\u0002\u0002\u0070\u0075\u0007\u0026\u0002\u0002\u0071\u0076\u0005\u0006\u0004\u0002\u0072\u0076\u0005\u0014\u000b\u0002\u0073\u0076\u0005\u000a\u0006\u0002\u0074\u0076\u0005\u000c\u0007\u0002\u0075\u0071\u0003\u0002\u0002\u0002\u0075\u0072\u0003\u0002\u0002\u0002\u0075\u0073\u0003\u0002\u0002\u0002\u0075\u0074\u0003\u0002\u0002\u0002\u0076\u0077\u0003\u0002\u0002\u0002\u0077\u0078\u0007\u0027\u0002\u0002\u0078\u007b\u0005\u0008\u0005\u0002\u0079\u007a\u0007\u0005\u0002\u0002\u007a\u007c\u0005\u0008\u0005\u0002\u007b\u0079\u0003\u0002\u0002\u0002\u007b\u007c\u0003\u0002\u0002\u0002\u007c\u0011\u0003\u0002\u0002\u0002\u007d\u007e\u0007\u0006\u0002\u0002\u007e\u0083\u0007\u0026\u0002\u0002\u007f\u0084\u0005\u0006\u0004\u0002\u0080\u0084\u0005\u0014\u000b\u0002\u0081\u0084\u0005\u000a\u0006\u0002\u0082\u0084\u0005\u000c\u0007\u0002\u0083\u007f\u0003\u0002\u0002\u0002\u0083\u0080\u0003\u0002\u0002\u0002\u0083\u0081\u0003\u0002\u0002\u0002\u0083\u0082\u0003\u0002\u0002\u0002\u0084\u0085\u0003\u0002\u0002\u0002\u0085\u0086\u0007\u0027\u0002\u0002\u0086\u0087\u0005\u0008\u0005\u0002\u0087\u0013\u0003\u0002\u0002\u0002\u0088\u008d\u0005\u0016\u000c\u0002\u0089\u008a\u0007\u001c\u0002\u0002\u008a\u008c\u0005\u0016\u000c\u0002\u008b\u0089\u0003\u0002\u0002\u0002\u008c\u008f\u0003\u0002\u0002\u0002\u008d\u008b\u0003\u0002\u0002\u0002\u008d\u008e\u0003\u0002\u0002\u0002\u008e\u0015\u0003\u0002\u0002\u0002\u008f\u008d\u0003\u0002\u0002\u0002\u0090\u0095\u0005\u0018\u000d\u0002\u0091\u0092\u0007\u001d\u0002\u0002\u0092\u0094\u0005\u0018\u000d\u0002\u0093\u0091\u0003\u0002\u0002\u0002\u0094\u0097\u0003\u0002\u0002\u0002\u0095\u0093\u0003\u0002\u0002\u0002\u0095\u0096\u0003\u0002\u0002\u0002\u0096\u0017\u0003\u0002\u0002\u0002\u0097\u0095\u0003\u0002\u0002\u0002\u0098\u009d\u0005\u001a\u000e\u0002\u0099\u009a\u0009\u0002\u0002\u0002\u009a\u009c\u0005\u001a\u000e\u0002\u009b\u0099\u0003\u0002\u0002\u0002\u009c\u009f\u0003\u0002\u0002\u0002\u009d\u009b\u0003\u0002\u0002\u0002\u009d\u009e\u0003\u0002\u0002\u0002\u009e\u0019\u0003\u0002\u0002\u0002\u009f\u009d\u0003\u0002\u0002\u0002\u00a0\u00a2\u0005\u001c\u000f\u0002\u00a1\u00a0\u0003\u0002\u0002\u0002\u00a1\u00a2\u0003\u0002\u0002\u0002\u00a2\u00a7\u0003\u0002\u0002\u0002\u00a3\u00a4\u0009\u0003\u0002\u0002\u00a4\u00a6\u0005\u001c\u000f\u0002\u00a5\u00a3\u0003\u0002\u0002\u0002\u00a6\u00a9\u0003\u0002\u0002\u0002\u00a7\u00a5\u0003\u0002\u0002\u0002\u00a7\u00a8\u0003\u0002\u0002\u0002\u00a8\u001b\u0003\u0002\u0002\u0002\u00a9\u00a7\u0003\u0002\u0002\u0002\u00aa\u00af\u0005\u001e\u0010\u0002\u00ab\u00ac\u0009\u0004\u0002\u0002\u00ac\u00ae\u0005\u001e\u0010\u0002\u00ad\u00ab\u0003\u0002\u0002\u0002\u00ae\u00b1\u0003\u0002\u0002\u0002\u00af\u00ad\u0003\u0002\u0002\u0002\u00af\u00b0\u0003\u0002\u0002\u0002\u00b0\u001d\u0003\u0002\u0002\u0002\u00b1\u00af\u0003\u0002\u0002\u0002\u00b2\u00b6\u0005\u0020\u0011\u0002\u00b3\u00b4\u0007\u001e\u0002\u0002\u00b4\u00b6\u0005\u001e\u0010\u0002\u00b5\u00b2\u0003\u0002\u0002\u0002\u00b5\u00b3\u0003\u0002\u0002\u0002\u00b6\u001f\u0003\u0002\u0002\u0002\u00b7\u00bf\u0007\u0003\u0002\u0002\u00b8\u00bf\u0007\u0021\u0002\u0002\u00b9\u00bf\u0007\u0010\u0002\u0002\u00ba\u00bb\u0007\u0026\u0002\u0002\u00bb\u00bc\u0005\u0014\u000b\u0002\u00bc\u00bd\u0007\u0027\u0002\u0002\u00bd\u00bf\u0003\u0002\u0002\u0002\u00be\u00b7\u0003\u0002\u0002\u0002\u00be\u00b8\u0003\u0002\u0002\u0002\u00be\u00b9\u0003\u0002\u0002\u0002\u00be\u00ba\u0003\u0002\u0002\u0002\u00bf\u0021\u0003\u0002\u0002\u0002\u0016\u0025\u0031\u0037\u003e\u0046\u004f\u005b\u0064\u006a\u0075\u007b\u0083\u008d\u0095\u009d\u00a1\u00a7\u00af\u00b5\u00be"
 
         val ATN = ATNDeserializer().deserialize(serializedATN.toCharArray())
         init {
@@ -183,6 +197,10 @@ class MiniCParser(input: TokenStream) : Parser(input) {
     private val WORD_END = Tokens.WORD_END.id
     private val COMMENT = Tokens.COMMENT.id
     private val LINE_COMMENT = Tokens.LINE_COMMENT.id
+    private val PRINTF = Tokens.PRINTF.id
+    private val SCANF = Tokens.SCANF.id
+    private val STRING_CHAR = Tokens.STRING_CHAR.id
+    private val PLACEHOLDER = Tokens.PLACEHOLDER.id
     private val ID = Tokens.ID.id
     private val TIMES = Tokens.TIMES.id
     private val DIVIDED = Tokens.DIVIDED.id
@@ -203,6 +221,7 @@ class MiniCParser(input: TokenStream) : Parser(input) {
     private val NUMBER = Tokens.NUMBER.id
     private val LETTER = Tokens.LETTER.id
     private val DIGIT = Tokens.DIGIT.id
+    private val COMMA = Tokens.COMMA.id
     private val UNDERSCORE = Tokens.UNDERSCORE.id
     private val RBRACKETOPEN = Tokens.RBRACKETOPEN.id
     private val RBRACKETCLOSE = Tokens.RBRACKETCLOSE.id
@@ -235,17 +254,17 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 31
+			this.state = 35
 			errorHandler.sync(this);
 			_la = _input!!.LA(1)
-			while ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl BOOL) or (1L shl IF) or (1L shl WHILE) or (1L shl TYPE) or (1L shl ID) or (1L shl PLUS) or (1L shl MINUS) or (1L shl MINOR) or (1L shl MINOREQUAL) or (1L shl MAJOR) or (1L shl MAJOREQUAL) or (1L shl ISEQUAL) or (1L shl ISNOTEQUAL) or (1L shl OR) or (1L shl AND) or (1L shl NOT) or (1L shl ENDOFINSTRUCTION) or (1L shl NUMBER) or (1L shl RBRACKETOPEN) or (1L shl CBRACKETOPEN))) != 0L)) {
+			while ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl BOOL) or (1L shl IF) or (1L shl WHILE) or (1L shl TYPE) or (1L shl PRINTF) or (1L shl SCANF) or (1L shl ID) or (1L shl PLUS) or (1L shl MINUS) or (1L shl MINOR) or (1L shl MINOREQUAL) or (1L shl MAJOR) or (1L shl MAJOREQUAL) or (1L shl ISEQUAL) or (1L shl ISNOTEQUAL) or (1L shl OR) or (1L shl AND) or (1L shl NOT) or (1L shl ENDOFINSTRUCTION) or (1L shl NUMBER) or (1L shl RBRACKETOPEN) or (1L shl CBRACKETOPEN))) != 0L)) {
 				if (true){
 				if (true){
-				this.state = 28
+				this.state = 32
 				statement()
 				}
 				}
-				this.state = 33
+				this.state = 37
 				errorHandler.sync(this)
 				_la = _input!!.LA(1)
 			}
@@ -277,6 +296,7 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 	open class SimpleDeclarationContext : DeclarationContext {
 		fun TYPE() : TerminalNode? = getToken(Tokens.TYPE.id, 0)
 		fun ID() : TerminalNode? = getToken(Tokens.ID.id, 0)
+		fun ENDOFINSTRUCTION() : TerminalNode? = getToken(Tokens.ENDOFINSTRUCTION.id, 0)
 		constructor(ctx: DeclarationContext) { copyFrom(ctx) }
 		override fun <T> accept(visitor : ParseTreeVisitor<out T>) : T {
 			if ( visitor is MiniCVisitor) return (visitor as MiniCVisitor<out T>).visitSimpleDeclaration(this)
@@ -288,6 +308,7 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		fun ID() : TerminalNode? = getToken(Tokens.ID.id, 0)
 		fun EQUAL() : TerminalNode? = getToken(Tokens.EQUAL.id, 0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
+		fun ENDOFINSTRUCTION() : TerminalNode? = getToken(Tokens.ENDOFINSTRUCTION.id, 0)
 		constructor(ctx: DeclarationContext) { copyFrom(ctx) }
 		override fun <T> accept(visitor : ParseTreeVisitor<out T>) : T {
 			if ( visitor is MiniCVisitor) return (visitor as MiniCVisitor<out T>).visitAssignDeclaration(this)
@@ -299,28 +320,32 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		var _localctx : DeclarationContext = DeclarationContext(context, state)
 		enterRule(_localctx, 2, Rules.RULE_declaration.id)
 		try {
-			this.state = 40
+			this.state = 47
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,1,context) ) {
 			1 -> {_localctx = SimpleDeclarationContext(_localctx)
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 34
+			this.state = 38
 			match(TYPE) as Token
-			this.state = 35
+			this.state = 39
 			match(ID) as Token
+			this.state = 40
+			match(ENDOFINSTRUCTION) as Token
 			}}
 			2 -> {_localctx = AssignDeclarationContext(_localctx)
 			enterOuterAlt(_localctx, 2)
 			if (true){
-			this.state = 36
+			this.state = 41
 			match(TYPE) as Token
-			this.state = 37
+			this.state = 42
 			match(ID) as Token
-			this.state = 38
+			this.state = 43
 			match(EQUAL) as Token
-			this.state = 39
+			this.state = 44
 			expression()
+			this.state = 45
+			match(ENDOFINSTRUCTION) as Token
 			}}
 			}
 		}
@@ -357,19 +382,19 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 42
+			this.state = 49
 			match(ID) as Token
-			this.state = 43
+			this.state = 50
 			match(EQUAL) as Token
-			this.state = 46
+			this.state = 53
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,2,context) ) {
 			1 -> {if (true){
-			this.state = 44
+			this.state = 51
 			assign()
 			}}
 			2 -> {if (true){
-			this.state = 45
+			this.state = 52
 			expression()
 			}}
 			}
@@ -393,10 +418,12 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		fun ENDOFINSTRUCTION() : TerminalNode? = getToken(Tokens.ENDOFINSTRUCTION.id, 0)
 		fun findAssign() : AssignContext? = getRuleContext(solver.getType("AssignContext"),0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
-		fun findDeclaration() : DeclarationContext? = getRuleContext(solver.getType("DeclarationContext"),0)
+		fun findPrintfStatement() : PrintfStatementContext? = getRuleContext(solver.getType("PrintfStatementContext"),0)
+		fun findScanfStatement() : ScanfStatementContext? = getRuleContext(solver.getType("ScanfStatementContext"),0)
 		fun findBlockStatement() : BlockStatementContext? = getRuleContext(solver.getType("BlockStatementContext"),0)
 		fun findIfStatement() : IfStatementContext? = getRuleContext(solver.getType("IfStatementContext"),0)
 		fun findWhileStatement() : WhileStatementContext? = getRuleContext(solver.getType("WhileStatementContext"),0)
+		fun findDeclaration() : DeclarationContext? = getRuleContext(solver.getType("DeclarationContext"),0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun <T> accept(visitor : ParseTreeVisitor<out T>) : T {
@@ -409,55 +436,193 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		var _localctx : StatementContext = StatementContext(context, state)
 		enterRule(_localctx, 6, Rules.RULE_statement.id)
 		try {
-			this.state = 59
+			this.state = 68
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,4,context) ) {
 			1 -> {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 48
+			this.state = 55
 			match(ENDOFINSTRUCTION) as Token
 			}}
 			2 -> {
 			enterOuterAlt(_localctx, 2)
 			if (true){
-			this.state = 52
+			this.state = 60
 			errorHandler.sync(this)
 			when ( interpreter!!.adaptivePredict(_input!!,3,context) ) {
 			1 -> {if (true){
-			this.state = 49
+			this.state = 56
 			assign()
 			}}
 			2 -> {if (true){
-			this.state = 50
+			this.state = 57
 			expression()
 			}}
 			3 -> {if (true){
-			this.state = 51
-			declaration()
+			this.state = 58
+			printfStatement()
+			}}
+			4 -> {if (true){
+			this.state = 59
+			scanfStatement()
 			}}
 			}
-			this.state = 54
+			this.state = 62
 			match(ENDOFINSTRUCTION) as Token
 			}}
 			3 -> {
 			enterOuterAlt(_localctx, 3)
 			if (true){
-			this.state = 56
+			this.state = 64
 			blockStatement()
 			}}
 			4 -> {
 			enterOuterAlt(_localctx, 4)
 			if (true){
-			this.state = 57
+			this.state = 65
 			ifStatement()
 			}}
 			5 -> {
 			enterOuterAlt(_localctx, 5)
 			if (true){
-			this.state = 58
+			this.state = 66
 			whileStatement()
 			}}
+			6 -> {
+			enterOuterAlt(_localctx, 6)
+			if (true){
+			this.state = 67
+			declaration()
+			}}
+			}
+		}
+		catch (re: RecognitionException) {
+			_localctx.exception = re
+			errorHandler.reportError(this, re)
+			errorHandler.recover(this, re)
+		}
+		finally {
+			exitRule()
+		}
+		return _localctx
+	}
+
+	open class PrintfStatementContext : ParserRuleContext {
+	    override var ruleIndex: Int
+	        get() = Rules.RULE_printfStatement.id
+	        set(value) { throw RuntimeException() }
+		fun PRINTF() : TerminalNode? = getToken(Tokens.PRINTF.id, 0)
+		fun RBRACKETOPEN() : TerminalNode? = getToken(Tokens.RBRACKETOPEN.id, 0)
+		fun STRING_CHAR() : TerminalNode? = getToken(Tokens.STRING_CHAR.id, 0)
+		fun RBRACKETCLOSE() : TerminalNode? = getToken(Tokens.RBRACKETCLOSE.id, 0)
+		fun COMMA() : List<TerminalNode> = getTokens(Tokens.COMMA.id)
+		fun COMMA(i: Int) : TerminalNode = getToken(Tokens.COMMA.id, i) as TerminalNode
+		fun ID() : List<TerminalNode> = getTokens(Tokens.ID.id)
+		fun ID(i: Int) : TerminalNode = getToken(Tokens.ID.id, i) as TerminalNode
+		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
+		}
+		override fun <T> accept(visitor : ParseTreeVisitor<out T>) : T {
+			if ( visitor is MiniCVisitor) return (visitor as MiniCVisitor<out T>).visitPrintfStatement(this)
+			else return visitor.visitChildren(this)!!
+		}
+	}
+
+	fun  printfStatement() : PrintfStatementContext {
+		var _localctx : PrintfStatementContext = PrintfStatementContext(context, state)
+		enterRule(_localctx, 8, Rules.RULE_printfStatement.id)
+		var _la: Int
+		try {
+			enterOuterAlt(_localctx, 1)
+			if (true){
+			this.state = 70
+			match(PRINTF) as Token
+			this.state = 71
+			match(RBRACKETOPEN) as Token
+			this.state = 72
+			match(STRING_CHAR) as Token
+			this.state = 77
+			errorHandler.sync(this);
+			_la = _input!!.LA(1)
+			while (_la==COMMA) {
+				if (true){
+				if (true){
+				this.state = 73
+				match(COMMA) as Token
+				this.state = 74
+				match(ID) as Token
+				}
+				}
+				this.state = 79
+				errorHandler.sync(this)
+				_la = _input!!.LA(1)
+			}
+			this.state = 80
+			match(RBRACKETCLOSE) as Token
+			}
+		}
+		catch (re: RecognitionException) {
+			_localctx.exception = re
+			errorHandler.reportError(this, re)
+			errorHandler.recover(this, re)
+		}
+		finally {
+			exitRule()
+		}
+		return _localctx
+	}
+
+	open class ScanfStatementContext : ParserRuleContext {
+	    override var ruleIndex: Int
+	        get() = Rules.RULE_scanfStatement.id
+	        set(value) { throw RuntimeException() }
+		fun SCANF() : TerminalNode? = getToken(Tokens.SCANF.id, 0)
+		fun RBRACKETOPEN() : TerminalNode? = getToken(Tokens.RBRACKETOPEN.id, 0)
+		fun STRING_CHAR() : TerminalNode? = getToken(Tokens.STRING_CHAR.id, 0)
+		fun RBRACKETCLOSE() : TerminalNode? = getToken(Tokens.RBRACKETCLOSE.id, 0)
+		fun COMMA() : List<TerminalNode> = getTokens(Tokens.COMMA.id)
+		fun COMMA(i: Int) : TerminalNode = getToken(Tokens.COMMA.id, i) as TerminalNode
+		fun ID() : List<TerminalNode> = getTokens(Tokens.ID.id)
+		fun ID(i: Int) : TerminalNode = getToken(Tokens.ID.id, i) as TerminalNode
+		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
+		}
+		override fun <T> accept(visitor : ParseTreeVisitor<out T>) : T {
+			if ( visitor is MiniCVisitor) return (visitor as MiniCVisitor<out T>).visitScanfStatement(this)
+			else return visitor.visitChildren(this)!!
+		}
+	}
+
+	fun  scanfStatement() : ScanfStatementContext {
+		var _localctx : ScanfStatementContext = ScanfStatementContext(context, state)
+		enterRule(_localctx, 10, Rules.RULE_scanfStatement.id)
+		var _la: Int
+		try {
+			enterOuterAlt(_localctx, 1)
+			if (true){
+			this.state = 82
+			match(SCANF) as Token
+			this.state = 83
+			match(RBRACKETOPEN) as Token
+			this.state = 84
+			match(STRING_CHAR) as Token
+			this.state = 89
+			errorHandler.sync(this);
+			_la = _input!!.LA(1)
+			while (_la==COMMA) {
+				if (true){
+				if (true){
+				this.state = 85
+				match(COMMA) as Token
+				this.state = 86
+				match(ID) as Token
+				}
+				}
+				this.state = 91
+				errorHandler.sync(this)
+				_la = _input!!.LA(1)
+			}
+			this.state = 92
+			match(RBRACKETCLOSE) as Token
 			}
 		}
 		catch (re: RecognitionException) {
@@ -491,45 +656,45 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  blockStatement() : BlockStatementContext {
 		var _localctx : BlockStatementContext = BlockStatementContext(context, state)
-		enterRule(_localctx, 8, Rules.RULE_blockStatement.id)
+		enterRule(_localctx, 12, Rules.RULE_blockStatement.id)
 		var _la: Int
 		try {
 			var _alt: Int
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 61
+			this.state = 94
 			match(CBRACKETOPEN) as Token
-			this.state = 65
+			this.state = 98
 			errorHandler.sync(this)
-			_alt = interpreter!!.adaptivePredict(_input!!,5,context)
+			_alt = interpreter!!.adaptivePredict(_input!!,7,context)
 			while ( _alt!=2 && _alt!=INVALID_ALT_NUMBER ) {
 				if ( _alt==1 ) {
 					if (true){
 					if (true){
-					this.state = 62
+					this.state = 95
 					declaration()
 					}
 					} 
 				}
-				this.state = 67
+				this.state = 100
 				errorHandler.sync(this)
-				_alt = interpreter!!.adaptivePredict(_input!!,5,context)
+				_alt = interpreter!!.adaptivePredict(_input!!,7,context)
 			}
-			this.state = 71
+			this.state = 104
 			errorHandler.sync(this);
 			_la = _input!!.LA(1)
-			while ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl BOOL) or (1L shl IF) or (1L shl WHILE) or (1L shl TYPE) or (1L shl ID) or (1L shl PLUS) or (1L shl MINUS) or (1L shl MINOR) or (1L shl MINOREQUAL) or (1L shl MAJOR) or (1L shl MAJOREQUAL) or (1L shl ISEQUAL) or (1L shl ISNOTEQUAL) or (1L shl OR) or (1L shl AND) or (1L shl NOT) or (1L shl ENDOFINSTRUCTION) or (1L shl NUMBER) or (1L shl RBRACKETOPEN) or (1L shl CBRACKETOPEN))) != 0L)) {
+			while ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl BOOL) or (1L shl IF) or (1L shl WHILE) or (1L shl TYPE) or (1L shl PRINTF) or (1L shl SCANF) or (1L shl ID) or (1L shl PLUS) or (1L shl MINUS) or (1L shl MINOR) or (1L shl MINOREQUAL) or (1L shl MAJOR) or (1L shl MAJOREQUAL) or (1L shl ISEQUAL) or (1L shl ISNOTEQUAL) or (1L shl OR) or (1L shl AND) or (1L shl NOT) or (1L shl ENDOFINSTRUCTION) or (1L shl NUMBER) or (1L shl RBRACKETOPEN) or (1L shl CBRACKETOPEN))) != 0L)) {
 				if (true){
 				if (true){
-				this.state = 68
+				this.state = 101
 				statement()
 				}
 				}
-				this.state = 73
+				this.state = 106
 				errorHandler.sync(this)
 				_la = _input!!.LA(1)
 			}
-			this.state = 74
+			this.state = 107
 			match(CBRACKETCLOSE) as Token
 			}
 		}
@@ -555,6 +720,8 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		fun findStatement(i: Int) : StatementContext? = getRuleContext(solver.getType("StatementContext"),i)
 		fun findAssign() : AssignContext? = getRuleContext(solver.getType("AssignContext"),0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
+		fun findPrintfStatement() : PrintfStatementContext? = getRuleContext(solver.getType("PrintfStatementContext"),0)
+		fun findScanfStatement() : ScanfStatementContext? = getRuleContext(solver.getType("ScanfStatementContext"),0)
 		fun ELSE() : TerminalNode? = getToken(Tokens.ELSE.id, 0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
 		}
@@ -566,37 +733,45 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  ifStatement() : IfStatementContext {
 		var _localctx : IfStatementContext = IfStatementContext(context, state)
-		enterRule(_localctx, 10, Rules.RULE_ifStatement.id)
+		enterRule(_localctx, 14, Rules.RULE_ifStatement.id)
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 76
+			this.state = 109
 			match(IF) as Token
-			this.state = 77
+			this.state = 110
 			match(RBRACKETOPEN) as Token
-			this.state = 80
+			this.state = 115
 			errorHandler.sync(this)
-			when ( interpreter!!.adaptivePredict(_input!!,7,context) ) {
+			when ( interpreter!!.adaptivePredict(_input!!,9,context) ) {
 			1 -> {if (true){
-			this.state = 78
+			this.state = 111
 			assign()
 			}}
 			2 -> {if (true){
-			this.state = 79
+			this.state = 112
 			expression()
 			}}
+			3 -> {if (true){
+			this.state = 113
+			printfStatement()
+			}}
+			4 -> {if (true){
+			this.state = 114
+			scanfStatement()
+			}}
 			}
-			this.state = 82
+			this.state = 117
 			match(RBRACKETCLOSE) as Token
-			this.state = 83
+			this.state = 118
 			statement()
-			this.state = 86
+			this.state = 121
 			errorHandler.sync(this)
-			when ( interpreter!!.adaptivePredict(_input!!,8,context) ) {
+			when ( interpreter!!.adaptivePredict(_input!!,10,context) ) {
 			1   -> if (true){
-			this.state = 84
+			this.state = 119
 			match(ELSE) as Token
-			this.state = 85
+			this.state = 120
 			statement()
 			}
 			}
@@ -623,6 +798,8 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 		fun findStatement() : StatementContext? = getRuleContext(solver.getType("StatementContext"),0)
 		fun findAssign() : AssignContext? = getRuleContext(solver.getType("AssignContext"),0)
 		fun findExpression() : ExpressionContext? = getRuleContext(solver.getType("ExpressionContext"),0)
+		fun findPrintfStatement() : PrintfStatementContext? = getRuleContext(solver.getType("PrintfStatementContext"),0)
+		fun findScanfStatement() : ScanfStatementContext? = getRuleContext(solver.getType("ScanfStatementContext"),0)
 		constructor(parent: ParserRuleContext?, invokingState: Int) : super(parent, invokingState){
 		}
 		override fun <T> accept(visitor : ParseTreeVisitor<out T>) : T {
@@ -633,29 +810,37 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  whileStatement() : WhileStatementContext {
 		var _localctx : WhileStatementContext = WhileStatementContext(context, state)
-		enterRule(_localctx, 12, Rules.RULE_whileStatement.id)
+		enterRule(_localctx, 16, Rules.RULE_whileStatement.id)
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 88
+			this.state = 123
 			match(WHILE) as Token
-			this.state = 89
+			this.state = 124
 			match(RBRACKETOPEN) as Token
-			this.state = 92
+			this.state = 129
 			errorHandler.sync(this)
-			when ( interpreter!!.adaptivePredict(_input!!,9,context) ) {
+			when ( interpreter!!.adaptivePredict(_input!!,11,context) ) {
 			1 -> {if (true){
-			this.state = 90
+			this.state = 125
 			assign()
 			}}
 			2 -> {if (true){
-			this.state = 91
+			this.state = 126
 			expression()
 			}}
+			3 -> {if (true){
+			this.state = 127
+			printfStatement()
+			}}
+			4 -> {if (true){
+			this.state = 128
+			scanfStatement()
+			}}
 			}
-			this.state = 94
+			this.state = 131
 			match(RBRACKETCLOSE) as Token
-			this.state = 95
+			this.state = 132
 			statement()
 			}
 		}
@@ -688,30 +873,28 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  expression() : ExpressionContext {
 		var _localctx : ExpressionContext = ExpressionContext(context, state)
-		enterRule(_localctx, 14, Rules.RULE_expression.id)
+		enterRule(_localctx, 18, Rules.RULE_expression.id)
+		var _la: Int
 		try {
-			var _alt: Int
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 97
+			this.state = 134
 			e1()
-			this.state = 102
-			errorHandler.sync(this)
-			_alt = interpreter!!.adaptivePredict(_input!!,10,context)
-			while ( _alt!=2 && _alt!=INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					if (true){
-					if (true){
-					this.state = 98
-					match(OR) as Token
-					this.state = 99
-					e1()
-					}
-					} 
+			this.state = 139
+			errorHandler.sync(this);
+			_la = _input!!.LA(1)
+			while (_la==OR) {
+				if (true){
+				if (true){
+				this.state = 135
+				match(OR) as Token
+				this.state = 136
+				e1()
 				}
-				this.state = 104
+				}
+				this.state = 141
 				errorHandler.sync(this)
-				_alt = interpreter!!.adaptivePredict(_input!!,10,context)
+				_la = _input!!.LA(1)
 			}
 			}
 		}
@@ -744,30 +927,28 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  e1() : E1Context {
 		var _localctx : E1Context = E1Context(context, state)
-		enterRule(_localctx, 16, Rules.RULE_e1.id)
+		enterRule(_localctx, 20, Rules.RULE_e1.id)
+		var _la: Int
 		try {
-			var _alt: Int
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 105
+			this.state = 142
 			e2()
-			this.state = 110
-			errorHandler.sync(this)
-			_alt = interpreter!!.adaptivePredict(_input!!,11,context)
-			while ( _alt!=2 && _alt!=INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					if (true){
-					if (true){
-					this.state = 106
-					match(AND) as Token
-					this.state = 107
-					e2()
-					}
-					} 
+			this.state = 147
+			errorHandler.sync(this);
+			_la = _input!!.LA(1)
+			while (_la==AND) {
+				if (true){
+				if (true){
+				this.state = 143
+				match(AND) as Token
+				this.state = 144
+				e2()
 				}
-				this.state = 112
+				}
+				this.state = 149
 				errorHandler.sync(this)
-				_alt = interpreter!!.adaptivePredict(_input!!,11,context)
+				_la = _input!!.LA(1)
 			}
 			}
 		}
@@ -811,40 +992,37 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  e2() : E2Context {
 		var _localctx : E2Context = E2Context(context, state)
-		enterRule(_localctx, 18, Rules.RULE_e2.id)
+		enterRule(_localctx, 22, Rules.RULE_e2.id)
 		var _la: Int
 		try {
-			var _alt: Int
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 113
+			this.state = 150
 			e3()
-			this.state = 118
-			errorHandler.sync(this)
-			_alt = interpreter!!.adaptivePredict(_input!!,12,context)
-			while ( _alt!=2 && _alt!=INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					if (true){
-					if (true){
-					this.state = 114
-					(_localctx as E2Context).op = _input!!.LT(1)
-					_la = _input!!.LA(1)
-					if ( !((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl MINOR) or (1L shl MINOREQUAL) or (1L shl MAJOR) or (1L shl MAJOREQUAL) or (1L shl ISEQUAL) or (1L shl ISNOTEQUAL))) != 0L)) ) {
-						(_localctx as E2Context).op = errorHandler.recoverInline(this) as Token
-					}
-					else {
-						if ( _input!!.LA(1)== Tokens.EOF.id ) isMatchedEOF = true
-						errorHandler.reportMatch(this)
-						consume()
-					}
-					this.state = 115
-					e3()
-					}
-					} 
+			this.state = 155
+			errorHandler.sync(this);
+			_la = _input!!.LA(1)
+			while ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl MINOR) or (1L shl MINOREQUAL) or (1L shl MAJOR) or (1L shl MAJOREQUAL) or (1L shl ISEQUAL) or (1L shl ISNOTEQUAL))) != 0L)) {
+				if (true){
+				if (true){
+				this.state = 151
+				(_localctx as E2Context).op = _input!!.LT(1)
+				_la = _input!!.LA(1)
+				if ( !((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl MINOR) or (1L shl MINOREQUAL) or (1L shl MAJOR) or (1L shl MAJOREQUAL) or (1L shl ISEQUAL) or (1L shl ISNOTEQUAL))) != 0L)) ) {
+					(_localctx as E2Context).op = errorHandler.recoverInline(this) as Token
 				}
-				this.state = 120
+				else {
+					if ( _input!!.LA(1)== Tokens.EOF.id ) isMatchedEOF = true
+					errorHandler.reportMatch(this)
+					consume()
+				}
+				this.state = 152
+				e3()
+				}
+				}
+				this.state = 157
 				errorHandler.sync(this)
-				_alt = interpreter!!.adaptivePredict(_input!!,12,context)
+				_la = _input!!.LA(1)
 			}
 			}
 		}
@@ -880,46 +1058,45 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  e3() : E3Context {
 		var _localctx : E3Context = E3Context(context, state)
-		enterRule(_localctx, 20, Rules.RULE_e3.id)
+		enterRule(_localctx, 24, Rules.RULE_e3.id)
 		var _la: Int
 		try {
-			var _alt: Int
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 122
+			this.state = 159
 			errorHandler.sync(this)
-			when ( interpreter!!.adaptivePredict(_input!!,13,context) ) {
-			1   -> if (true){
-			this.state = 121
-			e4()
-			}
-			}
-			this.state = 128
-			errorHandler.sync(this)
-			_alt = interpreter!!.adaptivePredict(_input!!,14,context)
-			while ( _alt!=2 && _alt!=INVALID_ALT_NUMBER ) {
-				if ( _alt==1 ) {
-					if (true){
-					if (true){
-					this.state = 124
-					(_localctx as E3Context).op = _input!!.LT(1)
-					_la = _input!!.LA(1)
-					if ( !(_la==PLUS || _la==MINUS) ) {
-						(_localctx as E3Context).op = errorHandler.recoverInline(this) as Token
-					}
-					else {
-						if ( _input!!.LA(1)== Tokens.EOF.id ) isMatchedEOF = true
-						errorHandler.reportMatch(this)
-						consume()
-					}
-					this.state = 125
-					e4()
-					}
-					} 
+			_la = _input!!.LA(1)
+			if ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl BOOL) or (1L shl ID) or (1L shl NOT) or (1L shl NUMBER) or (1L shl RBRACKETOPEN))) != 0L)) {
+				if (true){
+				this.state = 158
+				e4()
 				}
-				this.state = 130
+			}
+
+			this.state = 165
+			errorHandler.sync(this);
+			_la = _input!!.LA(1)
+			while (_la==PLUS || _la==MINUS) {
+				if (true){
+				if (true){
+				this.state = 161
+				(_localctx as E3Context).op = _input!!.LT(1)
+				_la = _input!!.LA(1)
+				if ( !(_la==PLUS || _la==MINUS) ) {
+					(_localctx as E3Context).op = errorHandler.recoverInline(this) as Token
+				}
+				else {
+					if ( _input!!.LA(1)== Tokens.EOF.id ) isMatchedEOF = true
+					errorHandler.reportMatch(this)
+					consume()
+				}
+				this.state = 162
+				e4()
+				}
+				}
+				this.state = 167
 				errorHandler.sync(this)
-				_alt = interpreter!!.adaptivePredict(_input!!,14,context)
+				_la = _input!!.LA(1)
 			}
 			}
 		}
@@ -957,20 +1134,20 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  e4() : E4Context {
 		var _localctx : E4Context = E4Context(context, state)
-		enterRule(_localctx, 22, Rules.RULE_e4.id)
+		enterRule(_localctx, 26, Rules.RULE_e4.id)
 		var _la: Int
 		try {
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 131
+			this.state = 168
 			e5()
-			this.state = 136
+			this.state = 173
 			errorHandler.sync(this);
 			_la = _input!!.LA(1)
 			while ((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl TIMES) or (1L shl DIVIDED) or (1L shl MODULE))) != 0L)) {
 				if (true){
 				if (true){
-				this.state = 132
+				this.state = 169
 				(_localctx as E4Context).op = _input!!.LT(1)
 				_la = _input!!.LA(1)
 				if ( !((((_la) and 0x3f.inv()) == 0 && ((1L shl _la) and ((1L shl TIMES) or (1L shl DIVIDED) or (1L shl MODULE))) != 0L)) ) {
@@ -981,11 +1158,11 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 					errorHandler.reportMatch(this)
 					consume()
 				}
-				this.state = 133
+				this.state = 170
 				e5()
 				}
 				}
-				this.state = 138
+				this.state = 175
 				errorHandler.sync(this)
 				_la = _input!!.LA(1)
 			}
@@ -1019,23 +1196,23 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  e5() : E5Context {
 		var _localctx : E5Context = E5Context(context, state)
-		enterRule(_localctx, 24, Rules.RULE_e5.id)
+		enterRule(_localctx, 28, Rules.RULE_e5.id)
 		try {
-			this.state = 142
+			this.state = 179
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
 			BOOL , ID , NUMBER , RBRACKETOPEN  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 139
+			this.state = 176
 			e6()
 			}}
 			NOT  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 2)
 			if (true){
-			this.state = 140
+			this.state = 177
 			match(NOT) as Token
-			this.state = 141
+			this.state = 178
 			e5()
 			}}
 			else -> throw NoViableAltException(this)
@@ -1072,37 +1249,37 @@ class MiniCParser(input: TokenStream) : Parser(input) {
 
 	fun  e6() : E6Context {
 		var _localctx : E6Context = E6Context(context, state)
-		enterRule(_localctx, 26, Rules.RULE_e6.id)
+		enterRule(_localctx, 30, Rules.RULE_e6.id)
 		try {
-			this.state = 151
+			this.state = 188
 			errorHandler.sync(this)
 			when (_input!!.LA(1)) {
 			BOOL  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 1)
 			if (true){
-			this.state = 144
+			this.state = 181
 			match(BOOL) as Token
 			}}
 			NUMBER  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 2)
 			if (true){
-			this.state = 145
+			this.state = 182
 			match(NUMBER) as Token
 			}}
 			ID  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 3)
 			if (true){
-			this.state = 146
+			this.state = 183
 			match(ID) as Token
 			}}
 			RBRACKETOPEN  ->  /*LL1AltBlock*/{
 			enterOuterAlt(_localctx, 4)
 			if (true){
-			this.state = 147
+			this.state = 184
 			match(RBRACKETOPEN) as Token
-			this.state = 148
+			this.state = 185
 			expression()
-			this.state = 149
+			this.state = 186
 			match(RBRACKETCLOSE) as Token
 			}}
 			else -> throw NoViableAltException(this)

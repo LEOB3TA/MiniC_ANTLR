@@ -1,19 +1,24 @@
 package model
 
+import java.io.BufferedReader
+import java.io.InputStream
+import java.io.PrintStream
+import java.io.Reader
 import java.util.*
 
 
-class MiniCEval : MiniCBaseVisitor<Any>() {
+class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBaseVisitor<Any>() {
 
     private var undefinedVarBlock: Vector<HashMap<String, String>>
     private var memoryBlock: Vector<HashMap<String, Number>>
     private var blockLevel: Int
-    private var result : String
-
+    private var output: PrintStream
+    private var input: InputStream
 
 
     init {
-        result = ""
+        output = outputStream
+        input = inputStream
         undefinedVarBlock = Vector()
         memoryBlock = Vector()
         blockLevel = 0
@@ -21,24 +26,20 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
         memoryBlock.add(HashMap())
     }
 
-    fun getResult() : String{
-        return result
-    }
 
-
-    private fun getMemoryToString() : String {
-        var result =""
+    private fun getMemoryToString(): String {
+        var result = ""
         var i = 0
-        result+="\nundefined var:\n"
-        undefinedVarBlock.forEach {  result+="level $i: $it\n"; i++ }
+        result += "\nundefined var:\n"
+        undefinedVarBlock.forEach { result += "level $i: $it\n"; i++ }
         i = 0
-        result+=("memory :\n")
-        memoryBlock.forEach {  result+="level $i: $it\n"; i++ }
+        result += ("memory :\n")
+        memoryBlock.forEach { result += "level $i: $it\n"; i++ }
         return result
     }
 
     private fun insideUndefinedVar(key: String): Boolean {
-        undefinedVarBlock.forEach  {
+        undefinedVarBlock.forEach {
             if (it.containsKey(key)) {
                 return true
             }
@@ -142,10 +143,7 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
         } else {
             throw UndefinedVariableException("$id is not defined")
         }
-        result+="\n\nafter evaluation of: $id = $value"
-        result += getMemoryToString()
         return value
-
     }
 
     override fun visitSimpleDeclaration(ctx: MiniCParser.SimpleDeclarationContext) {
@@ -154,8 +152,6 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
             throw DoubleDeclarationException("you cannot declare $id more than once")
         }
         undefinedVarBlock[blockLevel][id] = ctx.TYPE()!!.text
-        result+="\n\nafter evaluation of: ${ctx.TYPE()!!.text} $id"
-        result += getMemoryToString()
     }
 
     override fun visitAssignDeclaration(ctx: MiniCParser.AssignDeclarationContext) {
@@ -169,12 +165,146 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
             "int" -> memoryBlock[blockLevel][id] = value.toInt()
             "double" -> memoryBlock[blockLevel][id] = value.toDouble()
         }
-        result+="\n\nafter evaluation of: ${ctx.TYPE()!!.text} $id = $value"
-        result += getMemoryToString()
     }
 
     override fun visitStatement(ctx: MiniCParser.StatementContext) {
         this.visit(ctx.getChild(0)!!)
+    }
+
+    override fun visitPrintfStatement(ctx: MiniCParser.PrintfStatementContext): Number { //restituisce il numero di caratteri stampati -1 se errore
+        var format = ctx.STRING_CHAR().toString().subSequence(1, ctx.STRING_CHAR().toString().length - 1).toString()
+        var i = 0
+        var j = 0
+        if (ctx.ID().isNotEmpty()) {
+            while (i < format.length) {
+                if (format[i] == '%' && format[i + 1] == 'd') {
+                    if (!insideMemory(ctx.ID(j).text)) throw NotInizializedVariableException(ctx.ID(j).text + " is not inizialized")
+                    output.print(getFromMemory(ctx.ID(j).text)!!.first.toInt())
+                    j++
+                    i += 2
+                } else if (format[i] == '%' && format[i + 1] == 'f') {
+                    if (!insideMemory(ctx.ID(j).text)) throw NotInizializedVariableException(ctx.ID(j).text + " is not inizialized")
+                    output.print(getFromMemory(ctx.ID(j).text)!!.first.toDouble())
+                    j++
+                    i += 2
+                } else if(format[i] == '\\' && format[i + 1] == 'r'){
+                    output.print('\r')
+                    i += 2
+                }else if(format[i] == '\\' && format[i + 1] == 'n'){
+                    output.print('\n')
+                    i += 2
+                }else if(format[i] == '\\' && format[i + 1] == 't'){
+                    output.print('\t')
+                    i += 2
+                }
+                else {
+                    output.print(format[i])
+                    i++
+                }
+            }
+        } else {
+            while (i < format.length) {
+                if(format[i] == '\\' && format[i + 1] == 'r'){
+                    output.print('\r')
+                    i += 2
+                }else if(format[i] == '\\' && format[i + 1] == 'n'){
+                    output.print('\n')
+                    i += 2
+                }else if(format[i] == '\\' && format[i + 1] == 't'){
+                    output.print('\t')
+                    i += 2
+                }else {
+                    output.print(format[i])
+                    i++
+                }
+            }
+        }
+        return if (i != 0) i
+        else -1
+    }
+
+    override fun visitScanfStatement(ctx: MiniCParser.ScanfStatementContext): Number {
+        var line = input.bufferedReader().readLine()
+        var rawFormat = ctx.STRING_CHAR().toString().subSequence(1, ctx.STRING_CHAR().toString().length - 1).toString()
+        var format=rawFormat
+        format=format.replace("[","\\[")
+        format=format.replace("]","\\]")
+        format=format.replace(":","\\:")
+        format=format.replace("*","\\*")
+        format=format.replace("+","\\+")
+        format=format.replace("^","\\^")
+        format=format.replace("{","\\{")
+        format=format.replace("}","\\}")
+        format=format.replace("$","\\$")
+        format=format.replace("%d","-?\\d{1,}")
+        format=format.replace("%f","-?\\d+[[.]\\d+]?")
+        var regex = Regex(format)
+        if(!line.matches(regex)) return -1 //errore formato sbagliato
+        line=line.replace(Regex("[^-?\\d{1,}]+")," ")
+        line=line.replace(Regex("[^-?\\d+[[.]\\d+]?]")," ")
+        var scanner = Scanner(line)
+        var i = 0
+        var j = 0
+            while (i < rawFormat.length) {
+                if (rawFormat[i] == '%' && rawFormat[i + 1] == 'd') {
+                    if (insideUndefinedVar(ctx.ID(j).text)) {
+                        val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
+                        val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
+                        if (type == "int") {
+                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
+                        } else {
+                            throw MismatchedType("the variable is a double but the format is %d")
+                        }
+                        removeFromUndefinedVar(ctx.ID(j).text)
+                        j++
+                    } else if (insideMemory(ctx.ID(j).text)) {
+                        val value = getFromMemory(ctx.ID(j).text)!!.first
+                        val level = getFromMemory(ctx.ID(j).text)!!.second
+                        if (value is Int) {
+                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
+                        } else {
+                            throw MismatchedType("the variable is a double but the format is %d")
+                        }
+                        j++
+                    } else {
+                        throw UndefinedVariableException(
+                            ctx.ID(j).text + "is not defined"
+                        )
+                    }
+                    i += 2
+                } else if (rawFormat[i] == '%' && rawFormat[i + 1] == 'f') {
+                    if (insideUndefinedVar(ctx.ID(j).text)) {
+                        val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
+                        val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
+                        if (type == "int") {
+                            throw MismatchedType("the variable is a int but the format is %f")
+                        } else {
+                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
+                        }
+                        removeFromUndefinedVar(ctx.ID(j).text)
+                        j++
+                    } else if (insideMemory(ctx.ID(j).text)) {
+                        val value = getFromMemory(ctx.ID(j).text)!!.first
+                        val level = getFromMemory(ctx.ID(j).text)!!.second
+                        if (value is Int) {
+                            throw MismatchedType("the variable is a int but the format is %f")
+                        } else {
+                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
+                        }
+                        j++
+                    } else {
+                        throw UndefinedVariableException(
+                            ctx.ID(j).text + "is not defined"
+                        )
+                    }
+                    i += 2
+                }
+                else{
+                    i++
+                }
+            }
+            return if (j != 0) i
+            else -1
     }
 
     override fun visitBlockStatement(ctx: MiniCParser.BlockStatementContext) {
@@ -220,7 +350,7 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
 
     override fun visitE2(ctx: MiniCParser.E2Context): Double {
         var res = this.visit(ctx.findE3(0)!!) as Double
-      ctx.findE3().drop(1).forEach {
+        ctx.findE3().drop(1).forEach {
             when (ctx.op!!.text) {
                 "<" -> res = if (res < this.visit(it) as Double) 1.0 else 0.0
                 "<=" -> res = if (res <= this.visit(it) as Double) 1.0 else 0.0
@@ -245,7 +375,7 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
             }
         } else {
             res = this.visit(ctx.findE4(0)!!) as Double
-           ctx.findE4().drop(1).forEach {
+            ctx.findE4().drop(1).forEach {
                 when (ctx.op!!.text) {
                     "+" -> res += this.visit(it) as Double
                     "-" -> res -= this.visit(it) as Double
@@ -260,7 +390,10 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
         ctx.findE5().drop(1).forEach {
             when (ctx.op!!.text) {
                 "*" -> res *= this.visit(it) as Double
-                "/" -> if (this.visit(it) == 0.0) throw ArithmeticException("exception cannot divide by 0") else res /= this.visit(it) as Double
+                "/" -> if (this.visit(it) == 0.0) throw ArithmeticException("exception cannot divide by 0") else res /= this.visit(
+                    it
+                ) as Double
+
                 "%" -> res %= this.visit(it) as Double
             }
         }
@@ -291,6 +424,4 @@ class MiniCEval : MiniCBaseVisitor<Any>() {
         return this.visit(ctx.findExpression()!!) as Double
     }
 }
-
-
 

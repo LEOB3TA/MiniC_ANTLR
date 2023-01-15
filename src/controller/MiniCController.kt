@@ -6,9 +6,9 @@ import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.tree.Trees
 import org.antlr.v4.kotlinruntime.tree.*
+import java.io.File
 
 class MiniCController  {
-
 
     var inputText = SimpleStringProperty("")
     var outputText = SimpleStringProperty("")
@@ -21,7 +21,7 @@ class MiniCController  {
              val charStream = CharStreams.fromString(inputText.value)
              val miniCLexer = MiniCLexer(charStream)
              val miniCParser = MiniCParser(CommonTokenStream(miniCLexer))
-             val miniCEval = MiniCEval()
+             val miniCEval = MiniCEval(System.out,System.`in`)
              try {
                  miniCEval.visit(miniCParser.program())
              } catch (e : DoubleDeclarationException){
@@ -34,7 +34,7 @@ class MiniCController  {
                  outputText.value=e.message
                  return
              }
-             outputText.value = miniCEval.getResult()
+          //   outputText.value = miniCEval.getResult()
          }
     }
 

@@ -35,6 +35,10 @@ class MiniCEvalTest {
             parser = MiniCParser(CommonTokenStream(MiniCLexer(CharStreams.fromString("int c=1/0;"))))
             eval.visit(parser.program())
         }
+        assertThrows<NotInizializedVariableException> {
+            parser = MiniCParser(CommonTokenStream(MiniCLexer(CharStreams.fromString("int c; printf(\"%d\",c"))))
+            eval.visit(parser.program())
+        }
     }
 
     @Test

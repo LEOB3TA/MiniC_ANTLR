@@ -8,11 +8,12 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import java.io.OutputStream
 import java.util.*
 
 class MiniCEvalTest {
 
-    private val eval = MiniCEval()
+    private val eval = MiniCEval(System.out,System.`in`)
     private lateinit var parser: MiniCParser
 
     @AfterEach
@@ -73,9 +74,26 @@ class MiniCEvalTest {
     }
 
     @Test
+    fun visitPrintfStatement(){
+        parser = MiniCParser(CommonTokenStream(MiniCLexer(CharStreams.fromString("int a=printf(\"prova\");"))))
+        val test = Vector<HashMap<String, Number>>()
+        test.add(HashMap())
+        test[0]["a"] = 5
+        eval.visit(parser.program())
+        assertEquals(test, eval.getMemoryBlock())
+        parser = MiniCParser(CommonTokenStream(MiniCLexer(CharStreams.fromString("a=printf(\"prova %d\",7);"))))
+        test[0]["a"] = 7
+        eval.visit(parser.program())
+        assertEquals(test, eval.getMemoryBlock())
+        parser = MiniCParser(CommonTokenStream(MiniCLexer(CharStreams.fromString("a=printf(\"prova %f\",7);"))))
+        test[0]["a"] = 7
+        eval.visit(parser.program())
+        assertEquals(test, eval.getMemoryBlock())
+    }
+
+    @Test
     fun visitIfStatement() {
-        parser =
-            MiniCParser(CommonTokenStream(MiniCLexer(CharStreams.fromString("int a; int b; int c;if(true){a=1;} if(false){b=7;c=8;} else{b=3;c=5;}"))))
+        parser = MiniCParser(CommonTokenStream(MiniCLexer(CharStreams.fromString("int a; int b; int c;if(true){a=1;} if(false){b=7;c=8;} else{b=3;c=5;}"))))
         val test = Vector<HashMap<String, Number>>()
         test.add(HashMap())
         test[0]["a"] = 1

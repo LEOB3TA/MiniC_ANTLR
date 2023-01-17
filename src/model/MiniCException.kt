@@ -16,12 +16,12 @@ class NotInizializedVariableException : Throwable{
 }
 
 
-class MismatchedType : Throwable{
+class MismatchedTypeException : Throwable{
     constructor(message: String?) : super(message)
     constructor() : super("Type mismatch in scanf")
 }
 
-class BadFormat : Throwable{
+class BadFormatException : Throwable{
     constructor(message: String?) : super(message)
     constructor() : super("The format of your input is not correct")
 }

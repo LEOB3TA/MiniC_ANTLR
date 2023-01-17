@@ -1,9 +1,7 @@
 package model
 
-import java.io.BufferedReader
 import java.io.InputStream
 import java.io.PrintStream
-import java.io.Reader
 import java.util.*
 
 
@@ -14,7 +12,6 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
     private var blockLevel: Int
     private var output: PrintStream
     private var input: InputStream
-
 
     init {
         output = outputStream
@@ -119,9 +116,9 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
     }
 
 
-    override fun visitAssign(ctx: MiniCParser.AssignContext): Double {
+    override fun visitAssign(ctx: MiniCParser.AssignContext): Number {
         val id = ctx.ID()!!.text
-        val value = this.visit(ctx.getChild(2)!!) as Double
+        val value = this.visit(ctx.getChild(2)!!) as Number
         if (insideUndefinedVar(id)) {
             val type = getFromUndefinedVar(id)!!.first
             val level = getFromUndefinedVar(id)!!.second
@@ -160,7 +157,7 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
             throw DoubleDeclarationException("you cannot declare $id more than once")
         }
         val type = ctx.TYPE()!!.text
-        val value: Number = this.visit(ctx.findExpression()!!) as Number
+        val value: Number = this.visit(ctx.getChild(3)!!) as Number
         when (type) {
             "int" -> memoryBlock[blockLevel][id] = value.toInt()
             "double" -> memoryBlock[blockLevel][id] = value.toDouble()
@@ -175,136 +172,139 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
         var format = ctx.STRING_CHAR().toString().subSequence(1, ctx.STRING_CHAR().toString().length - 1).toString()
         var i = 0
         var j = 0
-        if (ctx.ID().isNotEmpty()) {
+        var count = 0
+        if (ctx.findExpression().isNotEmpty()) {
             while (i < format.length) {
                 if (format[i] == '%' && format[i + 1] == 'd') {
-                    if (!insideMemory(ctx.ID(j).text)) throw NotInizializedVariableException(ctx.ID(j).text + " is not inizialized")
-                    output.print(getFromMemory(ctx.ID(j).text)!!.first.toInt())
+                    output.print((this.visit(ctx.findExpression(j)!!) as Number).toInt())
                     j++
                     i += 2
                 } else if (format[i] == '%' && format[i + 1] == 'f') {
-                    if (!insideMemory(ctx.ID(j).text)) throw NotInizializedVariableException(ctx.ID(j).text + " is not inizialized")
-                    output.print(getFromMemory(ctx.ID(j).text)!!.first.toDouble())
+                    output.print((this.visit(ctx.findExpression(j)!!) as Number).toDouble())
                     j++
                     i += 2
-                } else if(format[i] == '\\' && format[i + 1] == 'r'){
+                } else if (format[i] == '\\' && format[i + 1] == 'r') {
                     output.print('\r')
                     i += 2
-                }else if(format[i] == '\\' && format[i + 1] == 'n'){
+                } else if (format[i] == '\\' && format[i + 1] == 'n') {
                     output.print('\n')
                     i += 2
-                }else if(format[i] == '\\' && format[i + 1] == 't'){
+                } else if (format[i] == '\\' && format[i + 1] == 't') {
                     output.print('\t')
                     i += 2
-                }
-                else {
+                } else {
                     output.print(format[i])
                     i++
                 }
+                count++
             }
         } else {
             while (i < format.length) {
-                if(format[i] == '\\' && format[i + 1] == 'r'){
+                if (format[i] == '\\' && format[i + 1] == 'r') {
                     output.print('\r')
                     i += 2
-                }else if(format[i] == '\\' && format[i + 1] == 'n'){
+                } else if (format[i] == '\\' && format[i + 1] == 'n') {
                     output.print('\n')
                     i += 2
-                }else if(format[i] == '\\' && format[i + 1] == 't'){
+                } else if (format[i] == '\\' && format[i + 1] == 't') {
                     output.print('\t')
                     i += 2
-                }else {
+                } else {
                     output.print(format[i])
                     i++
                 }
+                count++
             }
         }
-        return if (i != 0) i
+        return if (count != 0) count
         else -1
     }
 
     override fun visitScanfStatement(ctx: MiniCParser.ScanfStatementContext): Number {
+        output.write('\n'.toInt())
+        while (input.available() == 0) {
+         //wait
+        }
         var line = input.bufferedReader().readLine()
         var rawFormat = ctx.STRING_CHAR().toString().subSequence(1, ctx.STRING_CHAR().toString().length - 1).toString()
-        var format=rawFormat
-        format=format.replace("[","\\[")
-        format=format.replace("]","\\]")
-        format=format.replace(":","\\:")
-        format=format.replace("*","\\*")
-        format=format.replace("+","\\+")
-        format=format.replace("^","\\^")
-        format=format.replace("{","\\{")
-        format=format.replace("}","\\}")
-        format=format.replace("$","\\$")
-        format=format.replace("%d","-?\\d{1,}")
-        format=format.replace("%f","-?\\d+[[.]\\d+]?")
+        var format = rawFormat
+        format = format.replace("[", "\\[")
+        format = format.replace("]", "\\]")
+        format = format.replace(":", "\\:")
+        format = format.replace("*", "\\*")
+        format = format.replace("+", "\\+")
+        format = format.replace("^", "\\^")
+        format = format.replace("{", "\\{")
+        format = format.replace("}", "\\}")
+        format = format.replace("$", "\\$")
+        format = format.replace("%d", "-?\\d{1,}")
+        format = format.replace("%f", "-?\\d+[[.]\\d+]?")
         var regex = Regex(format)
-        if(!line.matches(regex)) return -1 //errore formato sbagliato
-        line=line.replace(Regex("[^-?\\d{1,}]+")," ")
-        line=line.replace(Regex("[^-?\\d+[[.]\\d+]?]")," ")
+        if (!line.matches(regex)) throw BadFormatException();
+        line = line.replace(Regex("[^-?\\d{1,}]+"), " ")
+        line = line.replace(Regex("[^-?\\d+[[.]\\d+]?]"), " ")
         var scanner = Scanner(line)
         var i = 0
         var j = 0
-            while (i < rawFormat.length) {
-                if (rawFormat[i] == '%' && rawFormat[i + 1] == 'd') {
-                    if (insideUndefinedVar(ctx.ID(j).text)) {
-                        val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
-                        val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
-                        if (type == "int") {
-                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
-                        } else {
-                            throw MismatchedType("the variable is a double but the format is %d")
-                        }
-                        removeFromUndefinedVar(ctx.ID(j).text)
-                        j++
-                    } else if (insideMemory(ctx.ID(j).text)) {
-                        val value = getFromMemory(ctx.ID(j).text)!!.first
-                        val level = getFromMemory(ctx.ID(j).text)!!.second
-                        if (value is Int) {
-                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
-                        } else {
-                            throw MismatchedType("the variable is a double but the format is %d")
-                        }
-                        j++
+        while (i < rawFormat.length) {
+            if (rawFormat[i] == '%' && rawFormat[i + 1] == 'd') {
+                if (insideUndefinedVar(ctx.ID(j).text)) {
+                    val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
+                    val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
+                    if (type == "int") {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
                     } else {
-                        throw UndefinedVariableException(
-                            ctx.ID(j).text + "is not defined"
-                        )
+                        throw MismatchedTypeException("the variable is a double but the format is %d")
                     }
-                    i += 2
-                } else if (rawFormat[i] == '%' && rawFormat[i + 1] == 'f') {
-                    if (insideUndefinedVar(ctx.ID(j).text)) {
-                        val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
-                        val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
-                        if (type == "int") {
-                            throw MismatchedType("the variable is a int but the format is %f")
-                        } else {
-                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
-                        }
-                        removeFromUndefinedVar(ctx.ID(j).text)
-                        j++
-                    } else if (insideMemory(ctx.ID(j).text)) {
-                        val value = getFromMemory(ctx.ID(j).text)!!.first
-                        val level = getFromMemory(ctx.ID(j).text)!!.second
-                        if (value is Int) {
-                            throw MismatchedType("the variable is a int but the format is %f")
-                        } else {
-                            memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
-                        }
-                        j++
+                    removeFromUndefinedVar(ctx.ID(j).text)
+                    j++
+                } else if (insideMemory(ctx.ID(j).text)) {
+                    val value = getFromMemory(ctx.ID(j).text)!!.first
+                    val level = getFromMemory(ctx.ID(j).text)!!.second
+                    if (value is Int) {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
                     } else {
-                        throw UndefinedVariableException(
-                            ctx.ID(j).text + "is not defined"
-                        )
+                        throw MismatchedTypeException("the variable is a double but the format is %d")
                     }
-                    i += 2
+                    j++
+                } else {
+                    throw UndefinedVariableException(
+                        ctx.ID(j).text + "is not defined"
+                    )
                 }
-                else{
-                    i++
+                i += 2
+            } else if (rawFormat[i] == '%' && rawFormat[i + 1] == 'f') {
+                if (insideUndefinedVar(ctx.ID(j).text)) {
+                    val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
+                    val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
+                    if (type == "int") {
+                        throw MismatchedTypeException("the variable is a int but the format is %f")
+                    } else {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
+                    }
+                    removeFromUndefinedVar(ctx.ID(j).text)
+                    j++
+                } else if (insideMemory(ctx.ID(j).text)) {
+                    val value = getFromMemory(ctx.ID(j).text)!!.first
+                    val level = getFromMemory(ctx.ID(j).text)!!.second
+                    if (value is Int) {
+                        throw MismatchedTypeException("the variable is a int but the format is %f")
+                    } else {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
+                    }
+                    j++
+                } else {
+                    throw UndefinedVariableException(
+                        ctx.ID(j).text + "is not defined"
+                    )
                 }
+                i += 2
+            } else {
+                i++
             }
-            return if (j != 0) i
-            else -1
+        }
+        return if (j != 0) i
+        else -1
     }
 
     override fun visitBlockStatement(ctx: MiniCParser.BlockStatementContext) {
@@ -417,6 +417,8 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
             if (insideMemory(ctx.ID()!!.text)) {
                 val level = getFromMemory(ctx.ID()!!.text)!!.second
                 return memoryBlock[level][ctx.ID()!!.text]!!.toDouble()
+            } else if (insideUndefinedVar(ctx.ID()!!.text)) {
+                throw NotInizializedVariableException(ctx.ID()!!.text + " is not inizialized")
             } else {
                 throw UndefinedVariableException("${ctx.ID()} is undefined")
             }

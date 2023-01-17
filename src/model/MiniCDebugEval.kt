@@ -118,9 +118,9 @@ class MiniCDebugEval : MiniCBaseVisitor<Any>() {
     }
 
 
-    override fun visitAssign(ctx: MiniCParser.AssignContext): Double {
+    override fun visitAssign(ctx: MiniCParser.AssignContext): Number {
         val id = ctx.ID()!!.text
-        val value = this.visit(ctx.getChild(2)!!) as Double
+        val value = this.visit(ctx.getChild(2)!!) as Number
         if (insideUndefinedVar(id)) {
             val type = getFromUndefinedVar(id)!!.first
             val level = getFromUndefinedVar(id)!!.second
@@ -164,7 +164,7 @@ class MiniCDebugEval : MiniCBaseVisitor<Any>() {
             throw DoubleDeclarationException("you cannot declare $id more than once")
         }
         val type = ctx.TYPE()!!.text
-        val value: Number = this.visit(ctx.findExpression()!!) as Number
+        val value: Number = this.visit(ctx.getChild(3)!!) as Number
         when (type) {
             "int" -> memoryBlock[blockLevel][id] = value.toInt()
             "double" -> memoryBlock[blockLevel][id] = value.toDouble()

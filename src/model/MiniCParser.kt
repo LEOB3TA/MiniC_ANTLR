@@ -14,6 +14,8 @@ import org.antlr.v4.kotlinruntime.tree.ParseTreeVisitor
 import com.strumenta.kotlinmultiplatform.toCharArray
 import kotlin.reflect.KClass
 
+
+@Suppress("all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue")
 class MiniCParser(input: TokenStream) : Parser(input) {
 
     object solver : TypeDeclarator {

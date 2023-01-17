@@ -211,6 +211,7 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
                     i += 2
                 } else {
                     output.print(format[i])
+                    output.print(format[i])
                     i++
                 }
                 count++
@@ -240,7 +241,7 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
         format = format.replace("%d", "-?\\d{1,}")
         format = format.replace("%f", "-?\\d+[[.]\\d+]?")
         var regex = Regex(format)
-        if (!line.matches(regex)) throw BadFormatException();
+        if (!line.matches(regex)) throw BadFormatException()
         line = line.replace(Regex("[^-?\\d{1,}]+"), " ")
         line = line.replace(Regex("[^-?\\d+[[.]\\d+]?]"), " ")
         var scanner = Scanner(line)
@@ -269,7 +270,7 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
                     j++
                 } else {
                     throw UndefinedVariableException(
-                        ctx.ID(j).text + "is not defined"
+                        ctx.ID(j).text + " is not defined"
                     )
                 }
                 i += 2
@@ -295,7 +296,7 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
                     j++
                 } else {
                     throw UndefinedVariableException(
-                        ctx.ID(j).text + "is not defined"
+                        ctx.ID(j).text + " is not defined"
                     )
                 }
                 i += 2

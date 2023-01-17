@@ -1,18 +1,24 @@
 package model
 
+import java.io.InputStream
+import java.io.PrintStream
 import java.util.*
 
 
-class MiniCDebugEval : MiniCBaseVisitor<Any>() {
+class MiniCDebugEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBaseVisitor<Any>() {
 
     private var undefinedVarBlock: Vector<HashMap<String, String>>
     private var memoryBlock: Vector<HashMap<String, Number>>
     private var blockLevel: Int
+    private var output: PrintStream
+    private var input: InputStream
     private var result : String
 
 
 
     init {
+        output = outputStream
+        input = inputStream
         result = ""
         undefinedVarBlock = Vector()
         memoryBlock = Vector()
@@ -146,6 +152,147 @@ class MiniCDebugEval : MiniCBaseVisitor<Any>() {
         result += getMemoryToString()
         return value
 
+    }
+
+    override fun visitPrintfStatement(ctx: MiniCParser.PrintfStatementContext): Number { //restituisce il numero di caratteri stampati -1 se errore
+        var format = ctx.STRING_CHAR().toString().subSequence(1, ctx.STRING_CHAR().toString().length - 1).toString()
+        var i = 0
+        var j = 0
+        var count = 0
+        if (ctx.findExpression().isNotEmpty()) {
+            while (i < format.length) {
+                if (format[i] == '%' && format[i + 1] == 'd') {
+                    output.print((this.visit(ctx.findExpression(j)!!) as Number).toInt())
+                    j++
+                    i += 2
+                } else if (format[i] == '%' && format[i + 1] == 'f') {
+                    output.print((this.visit(ctx.findExpression(j)!!) as Number).toDouble())
+                    j++
+                    i += 2
+                } else if (format[i] == '\\' && format[i + 1] == 'r') {
+                    output.print('\r')
+                    i += 2
+                } else if (format[i] == '\\' && format[i + 1] == 'n') {
+                    output.print('\n')
+                    i += 2
+                } else if (format[i] == '\\' && format[i + 1] == 't') {
+                    output.print('\t')
+                    i += 2
+                } else {
+                    output.print(format[i])
+                    i++
+                }
+                count++
+            }
+        } else {
+            while (i < format.length) {
+                if (format[i] == '\\' && format[i + 1] == 'r') {
+                    output.print('\r')
+                    i += 2
+                } else if (format[i] == '\\' && format[i + 1] == 'n') {
+                    output.print('\n')
+                    i += 2
+                } else if (format[i] == '\\' && format[i + 1] == 't') {
+                    output.print('\t')
+                    i += 2
+                } else {
+                    output.print(format[i])
+                    i++
+                }
+                count++
+            }
+        }
+        return if (count != 0) count
+        else -1
+    }
+
+    override fun visitScanfStatement(ctx: MiniCParser.ScanfStatementContext): Number {
+        output.write('\n'.toInt())
+        while (input.available() == 0) {
+            //wait
+        }
+        var line = input.bufferedReader().readLine()
+        var rawFormat = ctx.STRING_CHAR().toString().subSequence(1, ctx.STRING_CHAR().toString().length - 1).toString()
+        var format = rawFormat
+        format = format.replace("[", "\\[")
+        format = format.replace("]", "\\]")
+        format = format.replace(":", "\\:")
+        format = format.replace("*", "\\*")
+        format = format.replace("+", "\\+")
+        format = format.replace("^", "\\^")
+        format = format.replace("{", "\\{")
+        format = format.replace("}", "\\}")
+        format = format.replace("$", "\\$")
+        format = format.replace("%d", "-?\\d{1,}")
+        format = format.replace("%f", "-?\\d+[[.]\\d+]?")
+        var regex = Regex(format)
+        if (!line.matches(regex)) throw BadFormatException()
+        line = line.replace(Regex("[^-?\\d{1,}]+"), " ")
+        line = line.replace(Regex("[^-?\\d+[[.]\\d+]?]"), " ")
+        var scanner = Scanner(line)
+        var i = 0
+        var j = 0
+        while (i < rawFormat.length) {
+            if (rawFormat[i] == '%' && rawFormat[i + 1] == 'd') {
+                if (insideUndefinedVar(ctx.ID(j).text)) {
+                    val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
+                    val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
+                    if (type == "int") {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
+                    } else {
+                        throw MismatchedTypeException("the variable is a double but the format is %d")
+                    }
+                    removeFromUndefinedVar(ctx.ID(j).text)
+                    j++
+                } else if (insideMemory(ctx.ID(j).text)) {
+                    val value = getFromMemory(ctx.ID(j).text)!!.first
+                    val level = getFromMemory(ctx.ID(j).text)!!.second
+                    if (value is Int) {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
+                    } else {
+                        throw MismatchedTypeException("the variable is a double but the format is %d")
+                    }
+                    j++
+                } else {
+                    throw UndefinedVariableException(
+                        ctx.ID(j).text + " is not defined"
+                    )
+                }
+                i += 2
+            } else if (rawFormat[i] == '%' && rawFormat[i + 1] == 'f') {
+                if (insideUndefinedVar(ctx.ID(j).text)) {
+                    val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
+                    val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
+                    if (type == "int") {
+                        throw MismatchedTypeException("the variable is a int but the format is %f")
+                    } else {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
+                    }
+                    removeFromUndefinedVar(ctx.ID(j).text)
+                    j++
+                } else if (insideMemory(ctx.ID(j).text)) {
+                    val value = getFromMemory(ctx.ID(j).text)!!.first
+                    val level = getFromMemory(ctx.ID(j).text)!!.second
+                    if (value is Int) {
+                        throw MismatchedTypeException("the variable is a int but the format is %f")
+                    } else {
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble()
+                    }
+                    j++
+                } else {
+                    throw UndefinedVariableException(
+                        ctx.ID(j).text + " is not defined"
+                    )
+                }
+                i += 2
+            } else {
+                i++
+            }
+        }
+        result+="\n\nafter evaluation of: scanf"
+        result += getMemoryToString()
+        return if (j != 0) i
+        else -1
     }
 
     override fun visitSimpleDeclaration(ctx: MiniCParser.SimpleDeclarationContext) {
@@ -284,6 +431,8 @@ class MiniCDebugEval : MiniCBaseVisitor<Any>() {
             if (insideMemory(ctx.ID()!!.text)) {
                 val level = getFromMemory(ctx.ID()!!.text)!!.second
                 return memoryBlock[level][ctx.ID()!!.text]!!.toDouble()
+            } else if (insideUndefinedVar(ctx.ID()!!.text)) {
+                throw NotInizializedVariableException(ctx.ID()!!.text + " is not inizialized")
             } else {
                 throw UndefinedVariableException("${ctx.ID()} is undefined")
             }
@@ -291,6 +440,4 @@ class MiniCDebugEval : MiniCBaseVisitor<Any>() {
         return this.visit(ctx.findExpression()!!) as Double
     }
 }
-
-
 

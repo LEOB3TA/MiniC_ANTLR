@@ -35,11 +35,17 @@ class MiniCController {
                 }
             } else if (choice == 2) {
                 this@MiniCController.print()
+            } else if(choice ==3){
+                this@MiniCController.dbg()
             } else {
                 System.err.print("wrong identifier of a function")
                 exitProcess(1)
             }
         }
+    }
+
+    fun debug(){
+        GlobalScope.launch { channel.send(3) }
     }
 
     fun evaluate() {
@@ -142,4 +148,26 @@ class MiniCController {
         }
     }
 
+    private fun dbg() {
+        if (chk()) {
+            val charStream = CharStreams.fromString(inputText.value)
+            val miniCLexer = MiniCLexer(charStream)
+            val miniCParser = MiniCParser(CommonTokenStream(miniCLexer))
+            val miniCEval = MiniCDebugEval(System.out, System.`in`)
+            try {
+                miniCEval.visit(miniCParser.program())
+                println(miniCEval.getResult())
+            } catch (e: DoubleDeclarationException) {
+                println(e.message)
+            } catch (e: UndefinedVariableException) {
+                println(e.message)
+            } catch (e: ArithmeticException) {
+                println(e.message)
+            } catch (e: MismatchedTypeException) {
+                println(e.message)
+            } catch (e: BadFormatException) {
+                println(e.message)
+            }
+        }
+    }
 }

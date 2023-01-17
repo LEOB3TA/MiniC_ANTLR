@@ -10,6 +10,8 @@ import org.antlr.v4.kotlinruntime.atn.PredictionContextCache
 import org.antlr.v4.kotlinruntime.dfa.DFA
 import com.strumenta.kotlinmultiplatform.toCharArray
 
+@Suppress("all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue")
+
 class MiniCLexer(val input: CharStream) : Lexer(input) {
 	// TODO Verify the runtime version is correct
 

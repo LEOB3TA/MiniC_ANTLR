@@ -3,7 +3,6 @@ package view
 import controller.MiniCController
 import javafx.application.Platform
 import javafx.concurrent.Task
-import javafx.event.EventHandler
 import javafx.geometry.Orientation
 import javafx.scene.control.Alert
 import javafx.scene.control.TextArea
@@ -11,14 +10,10 @@ import javafx.scene.image.Image
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
 import javafx.scene.text.Font
-import javafx.scene.text.FontPosture
 import javafx.scene.text.FontWeight
 import javafx.stage.FileChooser
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import tornadofx.*
 import java.io.*
-import javax.swing.border.Border
 import kotlin.system.exitProcess
 
 
@@ -96,6 +91,11 @@ class MiniCView : View("MiniC") {
                     (scene.lookup("#output")as TextArea).isEditable=true
                     (scene.lookup("#output")as TextArea).text=""
                     controller.evaluate()
+                }
+                item("Debug", "Shortcut+D").action {
+                    (scene.lookup("#output")as TextArea).isEditable=true
+                    (scene.lookup("#output")as TextArea).text=""
+                    controller.debug()
                 }
                 item("Print parse tree", "Shortcut+P").action {
                     (scene.lookup("#output")as TextArea).isEditable=false

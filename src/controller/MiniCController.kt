@@ -123,19 +123,19 @@ class MiniCController {
     }
 
     private fun format(parser: MiniCParser, indent: Int = 0, tree: ParseTree): String = buildString {
-        if (tree.text == ";" || tree.text == "(" || tree.text == ")" || tree.text == "{" || tree.text == "}") {
+       if (tree.text == ";"){
+           return@buildString
+       } else if ( tree.text == "(" || tree.text == ")" || tree.text == "{" || tree.text == "}") {
+            append(tree.text)
             return@buildString
-        }
+       }
         var prefix = "   ".repeat(indent)
-        if (Trees.getNodeText(tree, parser).matches("e[1-6]".toRegex())) {
+        if (Trees.getNodeText(tree, parser).matches("e[1-6]".toRegex()) || Trees.getNodeText(tree, parser)=="expression") {
             for (i in 0 until tree.childCount) {
                 append(format(parser, indent, tree.getChild(i)!!))
             }
         } else {
             append(Trees.getNodeText(tree, parser))
-            if (Trees.getNodeText(tree, parser) == "expression") {
-                prefix = "$prefix     "
-            }
             if (tree.childCount != 0) {
                 prefix = prefix.repeat(2)
                 append("\n$prefix|\n$prefix|\n$prefix|\n$prefix|__")

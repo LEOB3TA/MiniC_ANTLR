@@ -223,13 +223,12 @@ class MiniCDebugEval(outputStream: PrintStream, inputStream: InputStream) : Mini
         format = format.replace("{", "\\{")
         format = format.replace("}", "\\}")
         format = format.replace("$", "\\$")
-        format = format.replace("%d", "-?\\d{1,}")
-        format = format.replace("%f", "-?\\d+[[.]\\d+]?")
+        format = format.replace("%d", "[-+]?[0-9]+")
+        format = format.replace("%f", "[-+]?[0-9]*\\.?[0-9]+([eE][-+]?[0-9]+)?")
         var regex = Regex(format)
         if (!line.matches(regex)) throw BadFormatException()
-        line = line.replace(Regex("[^-?\\d{1,}]+"), " ")
-        line = line.replace(Regex("[^-?\\d+[[.]\\d+]?]"), " ")
-        var scanner = Scanner(line)
+        line = line.replace(Regex("[^\\d\\.\\-+eE]+"), " ")
+        var scanner = Scanner(line).useLocale(Locale.US)
         var i = 0
         var j = 0
         while (i < rawFormat.length) {
@@ -238,7 +237,7 @@ class MiniCDebugEval(outputStream: PrintStream, inputStream: InputStream) : Mini
                     val type = getFromUndefinedVar(ctx.ID(j).text)!!.first
                     val level = getFromUndefinedVar(ctx.ID(j).text)!!.second
                     if (type == "int") {
-                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextInt()
                     } else {
                         throw MismatchedTypeException("the variable is a double but the format is %d")
                     }
@@ -248,7 +247,7 @@ class MiniCDebugEval(outputStream: PrintStream, inputStream: InputStream) : Mini
                     val value = getFromMemory(ctx.ID(j).text)!!.first
                     val level = getFromMemory(ctx.ID(j).text)!!.second
                     if (value is Int) {
-                        memoryBlock[level][ctx.ID(j).text] = scanner.nextDouble().toInt()
+                        memoryBlock[level][ctx.ID(j).text] = scanner.nextInt()
                     } else {
                         throw MismatchedTypeException("the variable is a double but the format is %d")
                     }

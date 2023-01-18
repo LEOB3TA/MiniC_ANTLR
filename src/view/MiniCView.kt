@@ -170,7 +170,7 @@ class MiniCView : View("MiniC") {
                         if (it.code == KeyCode.ENTER) {
                             var list = this.text.split("\n")
                             var last = list[list.size - 1] + "\n"
-                            if (!pause && last.matches(Regex("\\w*\\n"))) {
+                            if (!pause && last.matches(Regex(".+\\n"))) {
                                 pause = true
                                 try {
                                     pipedOutputStream1.write(last.toByteArray())

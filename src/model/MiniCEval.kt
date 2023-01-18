@@ -211,7 +211,6 @@ class MiniCEval(outputStream: PrintStream, inputStream: InputStream) : MiniCBase
                     i += 2
                 } else {
                     output.print(format[i])
-                    output.print(format[i])
                     i++
                 }
                 count++

@@ -212,6 +212,8 @@ class MiniCDebugEval(outputStream: PrintStream, inputStream: InputStream) : Mini
             //wait
         }
         var line = input.bufferedReader().readLine()
+        line = line.replace("true","1")
+        line = line.replace("false","0")
         var rawFormat = ctx.STRING_CHAR().toString().subSequence(1, ctx.STRING_CHAR().toString().length - 1).toString()
         var format = rawFormat
         format = format.replace("[", "\\[")

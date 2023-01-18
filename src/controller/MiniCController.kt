@@ -10,6 +10,7 @@ import org.antlr.v4.kotlinruntime.CommonTokenStream
 import org.antlr.v4.kotlinruntime.tree.*
 import kotlin.system.exitProcess
 
+
 class MiniCController {
 
     var inputText = SimpleStringProperty("")
@@ -30,12 +31,12 @@ class MiniCController {
             if (choice == 0) {
                 this@MiniCController.eval()
             } else if (choice == 1) {
-                if(this@MiniCController.chk()){
+                if (this@MiniCController.chk()) {
                     println("ready for evalutation...")
                 }
             } else if (choice == 2) {
                 this@MiniCController.print()
-            } else if(choice ==3){
+            } else if (choice == 3) {
                 this@MiniCController.dbg()
             } else {
                 System.err.print("wrong identifier of a function")
@@ -44,7 +45,7 @@ class MiniCController {
         }
     }
 
-    fun debug(){
+    fun debug() {
         GlobalScope.launch { channel.send(3) }
     }
 
@@ -123,14 +124,18 @@ class MiniCController {
     }
 
     private fun format(parser: MiniCParser, indent: Int = 0, tree: ParseTree): String = buildString {
-       if (tree.text == ";"){
-           return@buildString
-       } else if ( tree.text == "(" || tree.text == ")" || tree.text == "{" || tree.text == "}") {
+       var prefix = "   ".repeat(indent)
+        if (tree.text == ";" || tree.text == "{" || tree.text == "}") {
+            return@buildString
+        } else if (tree.text == "(" || tree.text == ")") {
             append(tree.text)
             return@buildString
-       }
-        var prefix = "   ".repeat(indent)
-        if (Trees.getNodeText(tree, parser).matches("e[1-6]".toRegex()) || Trees.getNodeText(tree, parser)=="expression") {
+        }
+        if (Trees.getNodeText(tree, parser).matches("e[1-6]".toRegex()) || Trees.getNodeText(
+                tree,
+                parser
+            ) == "expression"
+        ) {
             for (i in 0 until tree.childCount) {
                 append(format(parser, indent, tree.getChild(i)!!))
             }
@@ -140,7 +145,7 @@ class MiniCController {
                 prefix = prefix.repeat(2)
                 append("\n$prefix|\n$prefix|\n$prefix|\n$prefix|__")
                 for (i in 0 until tree.childCount) {
-                    append(format(parser, indent + 1, tree.getChild(i)!!))
+                    append(format(parser, indent+1, tree.getChild(i)!!))
                     append(" ")
                 }
                 append("\n")

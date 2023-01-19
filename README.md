@@ -71,8 +71,8 @@ You can save your input and your output in a file via the File menu
 - if-else
 - while
 - block ({})
-- printf -> only for int and double types,  you can insert also boolean value that will be cast to integer
-- scanf -> only for int and double types, you can insert also boolean value that will be cast to integer
+- printf -> only for int and double types,  you can insert also boolean value that will be cast to integer, you can only use %d and %f format
+- scanf -> only for int and double types, you can insert also boolean value that will be cast to integer, you can only use %d and %f format
 
 # Contribute
  

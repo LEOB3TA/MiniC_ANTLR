@@ -17,7 +17,7 @@ You have to install **Java JRE** on your computer
 
 ## Instructions
 
-- Download the .jar file for your OS from the release
+- Download the .jar file from the release
 - In Linux make it executable by:
 ```bash
 chmod +x Mini_ANTLR.jar
@@ -29,7 +29,7 @@ java -jar MiniC_ANTLR.jar
 
 # Usage
 
-The interface is divided in two part:
+The interface is divided in two parts:
 - Input area -> where you can write your code
 - Console -> where the program prints the output
 

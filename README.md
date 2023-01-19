@@ -17,7 +17,7 @@ You have to install **Java JRE** on your computer
 
 ## Instructions
 
-- Download the .jar file for your OS from the release
+- Download the .jar file from the release
 - In Linux make it executable by:
 ```bash
 chmod +x Mini_ANTLR.jar
@@ -29,7 +29,7 @@ java -jar MiniC_ANTLR.jar
 
 # Usage
 
-The interface is divided in two part:
+The interface is divided in two parts:
 - Input area -> where you can write your code
 - Console -> where the program prints the output
 
@@ -71,8 +71,8 @@ You can save your input and your output in a file via the File menu
 - if-else
 - while
 - block ({})
-- printf -> only for int and double types,  you can insert also boolean value that will be cast to integer
-- scanf -> only for int and double types, you can insert also boolean value that will be cast to integer
+- printf -> only for int and double types,  you can insert also boolean value that will be cast to integer, you can only use %d and %f format
+- scanf -> only for int and double types, you can insert also boolean value that will be cast to integer, you can only use %d and %f format
 
 # Contribute
  

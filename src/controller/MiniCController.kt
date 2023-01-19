@@ -14,7 +14,6 @@ import kotlin.system.exitProcess
 class MiniCController {
 
     var inputText = SimpleStringProperty("")
-
     val channel = Channel<Int>()
 
     private val parserListener: ErrorListener
@@ -32,7 +31,7 @@ class MiniCController {
                 this@MiniCController.eval()
             } else if (choice == 1) {
                 if (this@MiniCController.chk()) {
-                    println("ready for evalutation...")
+                    println("ready for evaluation...")
                 }
             } else if (choice == 2) {
                 this@MiniCController.print()
@@ -79,11 +78,17 @@ class MiniCController {
                 println(e.message)
             } catch (e: BadFormatException) {
                 println(e.message)
+            } catch (e: NotInizializedVariableException) {
+                println(e.message)
             }
         }
     }
 
     private fun chk(): Boolean {
+        if(inputText.value.isBlank() || inputText.value.isBlank()){
+            println("write something in the input area")
+            return false
+        }
         val result: Boolean
         val charStream = CharStreams.fromString(inputText.value)
         val miniCLexer = MiniCLexer(charStream)

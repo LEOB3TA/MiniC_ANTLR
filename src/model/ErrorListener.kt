@@ -8,6 +8,8 @@ import org.antlr.v4.kotlinruntime.misc.Utils
 
 class ErrorListener internal constructor() : BaseErrorListener() {
     private val syntaxErrors: MutableList<SyntaxErr> = ArrayList()
+
+
     fun getSyntaxErrors(): List<SyntaxErr> {
         return syntaxErrors
     }
@@ -24,8 +26,7 @@ class ErrorListener internal constructor() : BaseErrorListener() {
         msg: String,
         e: RecognitionException?
     ) {
-        e?.let { SyntaxErr(recognizer, offendingSymbol, line, charPositionInLine, msg, it) }
-            ?.let { syntaxErrors.add(it) }
+      syntaxErrors.add(  SyntaxErr(recognizer, offendingSymbol, line, charPositionInLine, msg, e))
     }
 
 

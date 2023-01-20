@@ -10,14 +10,14 @@ class SyntaxErr internal constructor(
     val line: Int,
     val charPositionInLine: Int,
     val message: String,
-    e: RecognitionException
+    e: RecognitionException?
 ) {
-    private val e: RecognitionException
+    private val e: RecognitionException?
 
     init {
         this.e = e
     }
 
-    val exception: RecognitionException
+    val exception: RecognitionException?
         get() = e
 }

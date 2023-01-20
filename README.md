@@ -6,6 +6,7 @@ This is small compiler for a little set of C
 - [How to install](#how-to-install)
 - [Usage](#usage)
 - [Features](#features)
+- [Examples](#examples)
 - [Contribute](#contribute)
 
 
@@ -73,6 +74,29 @@ You can save your input and your output in a file via the File menu
 - block ({})
 - printf -> only for int and double types,  you can insert also boolean value that will be cast to integer, you can only use %d and %f format
 - scanf -> only for int and double types, you can insert also boolean value that will be cast to integer, you can only use %d and %f format
+
+# Examples
+ ### Example of correct evaluation:
+ <img src="https://github.com/LEOB3TA/MiniC_ANTLR/blob/main/images/example1.png" width="550" height="650"/>
+ 
+ ### Example of evaluation error:
+ <img src="https://github.com/LEOB3TA/MiniC_ANTLR/blob/main/images/exampleEvaluationError.png" width="550" height="650"/>
+  
+ ### Example of lexer error:
+ <img src="https://github.com/LEOB3TA/MiniC_ANTLR/blob/main/images/exampleLexerError.png" width="550" height="650"/>
+ 
+ ### Example of parser error:
+ <img src="https://github.com/LEOB3TA/MiniC_ANTLR/blob/main/images/exampleParserError.png" width="550" height="650"/>
+ 
+ ### Example of correct check:
+ <img src="https://github.com/LEOB3TA/MiniC_ANTLR/blob/main/images/exampleReady.png" width="550" height="650"/>
+ 
+  ### Example of parse tree:
+ <img src="https://github.com/LEOB3TA/MiniC_ANTLR/blob/main/images/exampleParseTree.png" width="550" height="650"/>
+ 
+ 
+ 
+ 
 
 # Contribute
  

@@ -12,7 +12,7 @@ assign : ID EQUAL ( assign | expression | printfStatement | scanfStatement  );
 statement : ENDOFINSTRUCTION | ( assign | expression | printfStatement | scanfStatement  ) ENDOFINSTRUCTION | blockStatement | ifStatement | whileStatement | declaration;
 printfStatement : PRINTF RBRACKETOPEN STRING_CHAR (COMMA (expression))* RBRACKETCLOSE;
 scanfStatement : SCANF RBRACKETOPEN STRING_CHAR (COMMA (AMPERSAND ID))+ RBRACKETCLOSE;
-blockStatement : CBRACKETOPEN declaration* statement* CBRACKETCLOSE;
+blockStatement : CBRACKETOPEN statement* CBRACKETCLOSE;
 ifStatement : IF RBRACKETOPEN ( assign | expression | printfStatement | scanfStatement  ) RBRACKETCLOSE statement (ELSE statement)?;
 whileStatement : WHILE RBRACKETOPEN ( assign | expression | printfStatement | scanfStatement  ) RBRACKETCLOSE statement;
 expression : e1 ( OR e1)* ;

@@ -2,8 +2,11 @@ package controller
 
 import javafx.beans.property.SimpleStringProperty
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.channels.Channel
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.selects.select
 import model.*
 import org.antlr.v4.kotlinruntime.CharStreams
 import org.antlr.v4.kotlinruntime.CommonTokenStream
@@ -13,8 +16,10 @@ import kotlin.system.exitProcess
 
 class MiniCController {
 
-    var inputText = SimpleStringProperty("")
-    val channel = Channel<Int>()
+     var inputText = SimpleStringProperty("")
+     var isRunning = false
+
+    private val channel = Channel<Int>()
 
     private val parserListener: ErrorListener
     private val lexerListener: ErrorListener
@@ -24,29 +29,45 @@ class MiniCController {
         lexerListener = ErrorListener()
     }
 
+
+
+
     fun start() = GlobalScope.launch {
-        while (true) {
-            var choice = channel.receive()
-            if (choice == 0) {
-                this@MiniCController.eval()
-            } else if (choice == 1) {
-                if (this@MiniCController.chk()) {
-                    println("ready for evaluation...")
+        var choice : Int
+        var job : Job?
+        job= null
+        coroutineScope {
+            while (true) {
+                choice = channel.receive()
+                if(isRunning && choice!=4){
+                    println("a job is running, stop it before run another job")
+                } else {
+                    when (choice) {
+                        0 -> job = launch { ;isRunning = true; this@MiniCController.eval();isRunning = false; }
+                        1 -> job = launch {
+                            isRunning = true
+                            if (this@MiniCController.chk()) {
+                                println("ready for evaluation...")
+                            }
+                            isRunning = false
+                        }
+
+                        2 -> job = launch { isRunning = true; this@MiniCController.print(); isRunning = false; }
+                        3 -> job = launch { isRunning = true; this@MiniCController.dbg();isRunning = false; }
+                        4 -> {
+                            job?.cancel(); isRunning = false
+                        }
+
+                        else -> {
+                            System.err.print("wrong identifier")
+                            exitProcess(1)
+                        }
+                    }
                 }
-            } else if (choice == 2) {
-                this@MiniCController.print()
-            } else if (choice == 3) {
-                this@MiniCController.dbg()
-            } else {
-                System.err.print("wrong identifier of a function")
-                exitProcess(1)
             }
         }
     }
 
-    fun debug() {
-        GlobalScope.launch { channel.send(3) }
-    }
 
     fun evaluate() {
         GlobalScope.launch { channel.send(0) }
@@ -58,6 +79,15 @@ class MiniCController {
 
     fun printParseTree() {
         GlobalScope.launch { channel.send(2) }
+    }
+
+    fun debug() {
+        GlobalScope.launch { channel.send(3) }
+    }
+
+
+    fun stopRoutine(){
+        GlobalScope.launch { channel.send(4) }
     }
 
     private fun eval() {

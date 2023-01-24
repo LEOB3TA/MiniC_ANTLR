@@ -9,9 +9,13 @@ import javafx.scene.control.TextArea
 import javafx.scene.image.Image
 import javafx.scene.input.KeyCode
 import javafx.scene.input.KeyEvent
+import javafx.scene.paint.Color
+import javafx.scene.shape.Circle
 import javafx.scene.text.Font
 import javafx.scene.text.FontWeight
 import javafx.stage.FileChooser
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import tornadofx.*
 import java.io.*
 import kotlin.system.exitProcess
@@ -102,6 +106,11 @@ class MiniCView : View("MiniC") {
                     (scene.lookup("#output")as TextArea).text=""
                     controller.printParseTree()
                 }
+                item("Stop", "Shortcut+C").action {
+                    (scene.lookup("#output")as TextArea).isEditable=false
+                    (scene.lookup("#output")as TextArea).text=""
+                    controller.stopRoutine()
+                }
             }
             menu("Help") {
                 item("Help").action {
@@ -136,9 +145,32 @@ class MiniCView : View("MiniC") {
                 }
             }
             vbox {
-                label{text="Console"
-                    font= Font.font("system",FontWeight.EXTRA_BOLD,15.0)
+                borderpane{
+                    left= label{
+                        text="Console"
+                        font= Font.font("system",FontWeight.EXTRA_BOLD,15.0)
+                    }
+                   right= hbox {
+                        label{
+                            text="Status: "
+                            font= Font.font("system",FontWeight.EXTRA_BOLD,15.0)
+                        }
+                        circle {
+                            hboxConstraints { margin=insets(2) }
+                            radius = 7.0
+                            strokeWidth=3.5
+                            handleColorStop(this,Color.RED, Color.DARKRED)
+                        }
+                       circle {
+                           hboxConstraints { margin=insets(2) }
+                           radius = 7.0
+                           strokeWidth=3.5
+                           blinkColorRun(this,Color.LIMEGREEN, Color.DARKOLIVEGREEN)
+                       }
+                    }
+
                 }
+
                 textarea {
                     id="output"
                     font= Font.font("monospace", FontWeight.BOLD,13.0)
@@ -185,5 +217,39 @@ class MiniCView : View("MiniC") {
             }
         }
     }
+
+    fun handleColorStop(circle: Circle, color: Color, strokeColor: Color){
+        GlobalScope.launch{
+            while(true) {
+                if(!controller.isRunning) {
+                    circle.fill = color
+                    circle.stroke = strokeColor
+                }else{
+                    circle.fill = Color.WHITE
+                    circle.stroke = Color.GREY
+                }
+            }
+        }
+    }
+
+    fun blinkColorRun(circle: Circle,color: Color,strokeColor: Color){
+        GlobalScope.launch {
+            while(true) {
+                circle.fill = Color.WHITE
+                circle.stroke = Color.GREY
+                while(controller.isRunning) {
+                    Thread.sleep(500)
+                    circle.fill = Color.WHITE
+                    circle.stroke = Color.GREY
+                    Thread.sleep(500)
+                    circle.fill = color
+                    circle.stroke = strokeColor
+                }
+            }
+        }
+    }
+
 }
+
+
 

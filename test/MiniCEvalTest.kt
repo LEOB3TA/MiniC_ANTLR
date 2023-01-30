@@ -129,6 +129,7 @@ class MiniCEvalTest {
         test.add(HashMap())
         test[1]["c"] = 3
         test[1]["d"] = 5.8
+        test.add(HashMap())
         assertEquals(test, eval.getMemoryBlock())
     }
 

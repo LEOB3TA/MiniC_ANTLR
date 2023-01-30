@@ -172,7 +172,6 @@ class MiniCView : View("MiniC") {
                 }
 
                 textarea {
-                    id="output"
                     font= Font.font("monospace", FontWeight.BOLD,13.0)
                     fitToParentSize()
                     isEditable = false

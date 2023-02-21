@@ -220,7 +220,7 @@ class MiniCView : View("MiniC") {
     fun handleColorStop(circle: Circle, color: Color, strokeColor: Color){
         GlobalScope.launch{
             while(true) {
-                if(!controller.isRunning) {
+                if(!controller.isRunning()) {
                     circle.fill = color
                     circle.stroke = strokeColor
                 }else{
@@ -236,7 +236,7 @@ class MiniCView : View("MiniC") {
             while(true) {
                 circle.fill = Color.WHITE
                 circle.stroke = Color.GREY
-                while(controller.isRunning) {
+                while(controller.isRunning()) {
                     Thread.sleep(500)
                     circle.fill = Color.WHITE
                     circle.stroke = Color.GREY

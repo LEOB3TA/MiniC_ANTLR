@@ -16,8 +16,9 @@ import kotlin.system.exitProcess
 
 class MiniCController {
 
-     var inputText = SimpleStringProperty("")
-     var isRunning = false
+    var inputText = SimpleStringProperty("")
+    private var isRunning = false
+
 
     private val channel = Channel<Int>()
 
@@ -32,6 +33,10 @@ class MiniCController {
 
 
 
+    fun isRunning():Boolean{
+        return isRunning
+    }
+
     fun start() = GlobalScope.launch {
         var choice : Int
         var job : Job?
@@ -43,7 +48,7 @@ class MiniCController {
                     println("a job is running, stop it before run another job")
                 } else {
                     when (choice) {
-                        0 -> job = launch { ;isRunning = true; this@MiniCController.eval();isRunning = false; }
+                        0 -> job = launch { isRunning = true; this@MiniCController.eval();isRunning = false; }
                         1 -> job = launch {
                             isRunning = true
                             if (this@MiniCController.chk()) {
